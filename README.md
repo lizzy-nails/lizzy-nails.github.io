@@ -1,6 +1,6 @@
-# nail-master-landing
+# lizzy-nails.github.io
 
-Лендинг мастера маникюра Лизы с онлайн-записью. Статика без сборки, публикуется GitHub Pages из `main`.
+Лендинг мастера маникюра Лизы с онлайн-записью. Статика без сборки, публикуется GitHub Pages из `main`: https://lizzy-nails.github.io
 
 - `index.html`, `style.css` — страница
 - `nails.js` — рисует превью ногтей (SVG) по уровню дизайна и цвету
