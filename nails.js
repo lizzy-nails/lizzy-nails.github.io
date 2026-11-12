@@ -16,7 +16,7 @@
     medium: { ext: 30, shape: 'oval' },
     long:   { ext: 64, shape: 'almond' },
   };
-  const SKIN = '#f2c7b0';
+  const SKIN = '#f2c7b0', SKIN_SH = '#d9a088';
   const NEON = ['#ff2e88', '#d7ff3a', '#7b5cff', '#00d1c1', '#ff7a1a', '#ffe14d', '#120a10', '#ffffff'];
 
   function rng(seed) {
@@ -153,9 +153,10 @@
     out += '</defs>';
 
     /* palm and fingers */
-    out += `<path d="M60 330 L60 300 Q60 280 90 280 L410 280 Q440 280 440 300 L440 330 Z" fill="${SKIN}"/>`;
+    const L = FINGERS[0].x, R = FINGERS[FINGERS.length - 1].x + FINGERS[FINGERS.length - 1].w;
+    out += `<rect x="${L}" y="280" width="${R - L}" height="60" fill="${SKIN}"/>`; // palm, flush with the outer fingers
     FINGERS.forEach(f => {
-      out += `<rect x="${f.x}" y="${f.tip}" width="${f.w}" height="${330 - f.tip + 20}" rx="${f.w / 2}" fill="${SKIN}"/>`;
+      out += `<rect x="${f.x}" y="${f.tip}" width="${f.w}" height="${330 - f.tip + f.w}" rx="${f.w / 2}" fill="${SKIN}" stroke="${SKIN_SH}" stroke-width="2"/>`;
     });
 
     nails.forEach((n, i) => {
