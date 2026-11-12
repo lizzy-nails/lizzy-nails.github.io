@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Liza Nails — маникюр, который не прячут в карман</title>
-<meta name="description" content="Маникюр, покрытие, наращивание и дизайн от лёгкого до крейзи-мудбордов. Онлайн-запись на свободные окна.">
+<title>Liza Nails — маникюр и дизайн ногтей</title>
+<meta name="description" content="Маникюр, покрытие, наращивание и дизайн ногтей у Лизы. Онлайн-запись на свободные окна.">
 <meta name="theme-color" content="#ff2e88">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,12 +33,14 @@
   <section class="hero" id="book">
     <div class="wrap">
       <div class="hero__head">
-        <h1>Ногти, на&nbsp;которые <span class="hl">оборачиваются</span></h1>
-        <p class="lead">Привет, я Лиза. Выбирай окно, услугу и&nbsp;степень безумия — я&nbsp;покажу, как это будет выглядеть, ещё до&nbsp;того, как ты придёшь.</p>
+        <h1>Маникюр <span class="hl">у&nbsp;Лизы</span></h1>
+        <p class="lead">Выбери свободное окно, услугу, длину и&nbsp;дизайн — превью сразу покажет, как это примерно будет выглядеть.</p>
         <span class="sticker">запись онлайн ✦ 24/7</span>
       </div>
 
       <form class="booker" id="booker" novalidate>
+        <div class="booker__top">
+        <div class="booker__left">
         <!-- 1. Дата и время -->
         <div class="step step--cal">
           <div class="step__title"><b>01</b> Когда</div>
@@ -60,6 +62,9 @@
           <div class="step__title"><b>02</b> Что делаем</div>
           <div class="pills" id="services"></div>
 
+          <div class="step__sub">Длина</div>
+          <div class="levels levels--3" id="lengths"></div>
+
           <div class="design" id="design-block">
             <div class="step__sub">Дизайн</div>
             <div class="levels" id="levels-pick"></div>
@@ -68,7 +73,9 @@
           </div>
         </div>
 
-        <!-- превью -->
+        </div>
+
+        <!-- превью: липнет к экрану, но только в пределах верхнего блока -->
         <div class="step step--preview">
           <div class="preview">
             <div class="preview__tag" id="preview-tag">лёгкий</div>
@@ -78,9 +85,12 @@
               <button type="button" class="btn btn--ghost btn--sm" id="shuffle">↻ другой вариант</button>
             </div>
           </div>
-          <p class="note">Превью — примерное: показывает, насколько насыщенным будет дизайн. Точный рисунок подберём вместе по твоим референсам.</p>
+          <p class="note">Превью примерное: показывает длину и насыщенность дизайна. Точный рисунок подберём вместе по референсам.</p>
         </div>
 
+        </div>
+
+        <div class="booker__bottom">
         <!-- 3. Референсы -->
         <div class="step step--refs">
           <div class="step__title"><b>03</b> Референсы <small>по желанию</small></div>
@@ -98,9 +108,11 @@
             <label>Имя<input name="name" required maxlength="80" autocomplete="name"></label>
             <label>Телефон<input name="phone" type="tel" required maxlength="32" autocomplete="tel" placeholder="+7 900 000-00-00"></label>
             <label>Telegram / Instagram<input name="contact" maxlength="80" placeholder="@username — если удобнее писать"></label>
-            <label class="wide">Комментарий<textarea name="comment" rows="2" maxlength="1000" placeholder="длина, форма, аллергии, «сделай как на фото, но розовее»"></textarea></label>
+            <label class="wide">Комментарий<textarea name="comment" rows="2" maxlength="1000" placeholder="форма, аллергии, пожелания"></textarea></label>
             <input name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
           </div>
+        </div>
+
         </div>
 
         <div class="summary">
@@ -120,14 +132,14 @@
   </section>
 
   <div class="marquee" aria-hidden="true"><div class="marquee__in">
-    <span>гель-лак</span><span>✦</span><span>наращивание</span><span>✦</span><span>укрепление</span><span>✦</span><span>френч</span><span>✦</span><span>крейзи-мудборды</span><span>✦</span><span>гель-лак</span><span>✦</span><span>наращивание</span><span>✦</span><span>укрепление</span><span>✦</span><span>френч</span><span>✦</span><span>крейзи-мудборды</span><span>✦</span>
+    <span>гель-лак</span><span>✦</span><span>наращивание</span><span>✦</span><span>укрепление</span><span>✦</span><span>френч</span><span>✦</span><span>дизайн</span><span>✦</span><span>гель-лак</span><span>✦</span><span>наращивание</span><span>✦</span><span>укрепление</span><span>✦</span><span>френч</span><span>✦</span><span>дизайн</span><span>✦</span>
   </div></div>
 
   <!-- ── Уровни дизайна ───────────────────────────────────── -->
   <section class="section" id="levels">
     <div class="wrap">
-      <h2>Сколько безумия?</h2>
-      <p class="sub">Три уровня — от «на работу можно» до «на меня смотрит весь вагон».</p>
+      <h2>Уровни дизайна</h2>
+      <p class="sub">От пары акцентов до мудборда — выбирай, сколько рисунка хочется.</p>
       <div class="level-cards" id="level-cards"></div>
     </div>
   </section>
@@ -136,7 +148,7 @@
   <section class="section section--pink" id="prices">
     <div class="wrap">
       <h2>Цены</h2>
-      <p class="sub">Без сюрпризов в конце: дизайн считается по уровню, а не «по сложности на глаз».</p>
+      <p class="sub">Цена дизайна зависит от уровня — итог видно сразу в форме записи.</p>
       <div class="price-grid">
         <div class="price-list" id="price-list"></div>
         <div class="price-list price-list--dark" id="design-prices"></div>
@@ -147,14 +159,14 @@
   <!-- ── О Лизе ───────────────────────────────────────────── -->
   <section class="section" id="about">
     <div class="wrap about">
-      <div class="about__pic" aria-hidden="true"><svg id="about-hand" viewBox="0 0 500 330"></svg><span class="sticker sticker--alt">это я<br>делала</span></div>
+      <div class="about__pic" aria-hidden="true"><svg id="about-hand" viewBox="0 0 500 330"></svg></div>
       <div>
         <h2>Лиза</h2>
-        <p class="lead">Делаю ногти, которые не прячут в карман. Люблю сложные мудборды, но и аккуратный нюд на работу сделаю так, что он проходит три недели.</p>
+        <p class="lead">Мастер маникюра. Делаю и аккуратный однотон, и сложные дизайны по референсам.</p>
         <ul class="facts">
-          <li><b>Стерильно.</b> Сухожар и крафт-пакет, который вскрываю при тебе.</li>
-          <li><b>Носко.</b> Отслойка в первую неделю — исправлю бесплатно.</li>
-          <li><b>Честно.</b> Цена известна заранее — она прямо в форме записи.</li>
+          <li><b>Стерильно.</b> Сухожар и крафт-пакет, вскрываю при тебе.</li>
+          <li><b>Гарантия.</b> Отслойка в первую неделю — исправлю бесплатно.</li>
+          <li><b>Цена заранее.</b> Итог видно в форме записи.</li>
         </ul>
       </div>
     </div>

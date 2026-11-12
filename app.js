@@ -14,9 +14,14 @@
   ];
   const LEVELS = [
     { id: '',       name: 'Без дизайна', price: 0,    text: 'Однотонное покрытие, идеально ровно.' },
-    { id: 'light',  name: 'Лёгкий',      price: 300,  text: 'Пара акцентов: полосочка, цветочек, точка, сердечко — на 1–2 ногтях.' },
-    { id: 'medium', name: 'Средний',     price: 800,  text: 'Рисунок на каждом ногте: полоски, точки, френч, волны, узоры.' },
-    { id: 'crazy',  name: 'Крейзи',      price: 1800, text: 'Целый мудборд: каждый ноготь — своя история, неон, хром, стразы.' },
+    { id: 'light',  name: 'Лёгкий',      price: 300,  text: 'Пара акцентов на 1–2 ногтях: полоска, цветок, точка, сердечко.' },
+    { id: 'medium', name: 'Средний',     price: 800,  text: 'Рисунок на каждом ногте: полоски, точки, френч, волны.' },
+    { id: 'crazy',  name: 'Крейзи',      price: 1800, text: 'Мудборд: на каждом ногте свой рисунок, яркие цвета, хром, стразы.' },
+  ];
+  const LENGTHS = [
+    { id: 'short',  name: 'Короткие', text: 'чуть за край пальца' },
+    { id: 'medium', name: 'Средние',  text: 'заметно длиннее пальца' },
+    { id: 'long',   name: 'Длинные',  text: 'длинные, миндаль' },
   ];
   const COLORS = [
     ['#ff2e88', 'горячий розовый'], ['#ffc2d9', 'пудровый'], ['#e9c3b0', 'нюд'], ['#fff4ec', 'молочный'],
@@ -38,7 +43,7 @@
   const fmt = n => n.toLocaleString('ru-RU') + ' ₽';
   const st = {
     month: '', months: [], free: {}, today: '',
-    date: '', time: '', service: 'manicure_gel', design: 'light', color: COLORS[0][0],
+    date: '', time: '', service: 'manicure_gel', length: 'medium', design: 'light', color: COLORS[0][0],
     seed: 7, photos: [], // { blob, url }
   };
 
@@ -114,6 +119,7 @@
 
   function renderChoices() {
     $('services').innerHTML = SERVICES.map(s => `<button type="button" class="pill pill--svc${s.id === st.service ? ' on' : ''}" data-svc="${s.id}"><b>${s.name}</b><small>${fmt(s.price)} · ${s.time}</small></button>`).join('');
+    $('lengths').innerHTML = LENGTHS.map(l => `<button type="button" class="level${l.id === st.length ? ' on' : ''}" data-len="${l.id}">${l.name}<small>${l.text}</small></button>`).join('');
     $('design-block').classList.toggle('off', !svc().design);
     $('levels-pick').innerHTML = LEVELS.map(l => `<button type="button" class="level${l.id === st.design ? ' on' : ''}${l.id === 'crazy' ? ' level--crazy' : ''}" data-lvl="${l.id}">${l.name}<small>${l.price ? '+' + fmt(l.price) : 'включено'}</small></button>`).join('');
     $('colors').innerHTML = COLORS.map(([c, n]) => `<button type="button" class="swatch${c === st.color ? ' on' : ''}" data-color="${c}" style="--c:${c}" title="${n}" aria-label="${n}"></button>`).join('');
@@ -123,17 +129,21 @@
 
   function preview() {
     const l = lvl();
-    Nails.render($('hand'), { design: l.id, color: st.color, seed: st.seed });
+    Nails.render($('hand'), { design: l.id, length: st.length, color: st.color, seed: st.seed });
     $('preview-tag').textContent = l.id ? l.name.toLowerCase() : (svc().design ? 'без дизайна' : 'без покрытия');
     $('preview-tag').classList.toggle('crazy', l.id === 'crazy');
     $('preview-text').textContent = svc().design ? l.text : 'Без покрытия: ухоженные ногти, кутикула, форма, масло.';
     $('shuffle').hidden = !l.id;
-    if (!svc().design) Nails.render($('hand'), { design: '', color: '#f7d6cf', seed: 1 });
+    if (!svc().design) Nails.render($('hand'), { design: '', length: st.length, color: '#f7d6cf', seed: 1 });
   }
 
   $('services').addEventListener('click', e => {
     const b = e.target.closest('[data-svc]');
     if (b) { st.service = b.dataset.svc; renderChoices(); }
+  });
+  $('lengths').addEventListener('click', e => {
+    const b = e.target.closest('[data-len]');
+    if (b) { st.length = b.dataset.len; renderChoices(); }
   });
   $('levels-pick').addEventListener('click', e => {
     const b = e.target.closest('[data-lvl]');
@@ -153,7 +163,8 @@
       const [y, m, d] = st.date.split('-').map(Number);
       when = `${d} ${MONTHS_GEN[m - 1]}, ${WD[new Date(y, m - 1, d).getDay()]}` + (st.time ? ` в ${st.time}` : ' — выбери время');
     }
-    $('summary').innerHTML = `<b>${when}</b><span>${s.name}${l.id ? ' · дизайн «' + l.name.toLowerCase() + '»' : ''}</span><strong>${l.id === 'crazy' ? 'от ' : ''}${fmt(total)}</strong>`;
+    const len = LENGTHS.find(x => x.id === st.length).name.toLowerCase();
+    $('summary').innerHTML = `<b>${when}</b><span>${s.name} · ${len}${l.id ? ' · дизайн «' + l.name.toLowerCase() + '»' : ''}</span><strong>${l.id === 'crazy' ? 'от ' : ''}${fmt(total)}</strong>`;
     $('submit').disabled = !(st.date && st.time);
   }
 
@@ -209,7 +220,7 @@
     const fd = new FormData();
     const l = lvl();
     Object.entries({
-      date: st.date, time: st.time, service: st.service, design: l.id, color: svc().design ? st.color : '',
+      date: st.date, time: st.time, service: st.service, length: st.length, design: l.id, color: svc().design ? st.color : '',
       name: f.name.value, phone: f.phone.value, contact: f.contact.value, comment: f.comment.value, website: f.website.value,
     }).forEach(([k, v]) => fd.append(k, v));
     st.photos.forEach((p, i) => fd.append('photos', p.blob, `ref${i + 1}.jpg`));
@@ -248,15 +259,15 @@
 
   /* ── static sections ───────────────────────────────── */
   $('level-cards').innerHTML = LEVELS.filter(l => l.id).map(l => `
-    <article class="lcard${l.id === 'crazy' ? ' lcard--crazy' : ''}">
+    <article class="lcard">
       <svg id="lv-${l.id}" viewBox="0 0 500 330" aria-hidden="true"></svg>
       <h3>${l.name}</h3><p>${l.text}</p><span class="lcard__price">+${fmt(l.price)}</span>
-      <button type="button" class="btn btn--sm" data-pick="${l.id}">Хочу так</button>
+      <button type="button" class="btn btn--sm" data-pick="${l.id}">Выбрать</button>
     </article>`).join('');
-  Nails.render($('lv-light'), { design: 'light', color: '#ffc2d9', seed: 11 });
-  Nails.render($('lv-medium'), { design: 'medium', color: '#fff4ec', seed: 5 });
-  Nails.render($('lv-crazy'), { design: 'crazy', color: '#ff2e88', seed: 3 });
-  Nails.render($('about-hand'), { design: 'crazy', color: '#141014', seed: 42 });
+  Nails.render($('lv-light'), { design: 'light', length: 'short', color: '#ffc2d9', seed: 11 });
+  Nails.render($('lv-medium'), { design: 'medium', length: 'medium', color: '#fff4ec', seed: 5 });
+  Nails.render($('lv-crazy'), { design: 'crazy', length: 'long', color: '#ff2e88', seed: 3 });
+  Nails.render($('about-hand'), { design: 'medium', length: 'medium', color: '#141014', seed: 42 });
   $('level-cards').addEventListener('click', e => {
     const b = e.target.closest('[data-pick]');
     if (!b) return;
