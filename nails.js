@@ -5,10 +5,10 @@
 
   /* index, middle, ring, little: left edge, width, fingertip y */
   const FINGERS = [
-    { x: 52,  w: 92, tip: 112 },
-    { x: 158, w: 96, tip: 90 },
-    { x: 268, w: 90, tip: 108 },
-    { x: 372, w: 76, tip: 150 },
+    { x: 67,  w: 92, tip: 112 },
+    { x: 163, w: 96, tip: 90 },
+    { x: 263, w: 90, tip: 108 },
+    { x: 357, w: 76, tip: 150 },
   ];
   /* how far the free edge goes past the fingertip, and how pointed it is */
   const LENGTH = {
@@ -16,7 +16,7 @@
     medium: { ext: 30, shape: 'oval' },
     long:   { ext: 64, shape: 'almond' },
   };
-  const SKIN = '#f2c7b0', SKIN_SH = '#d9a088';
+  const SKIN = '#f2c7b0';
   const NEON = ['#ff2e88', '#d7ff3a', '#7b5cff', '#00d1c1', '#ff7a1a', '#ffe14d', '#120a10', '#ffffff'];
 
   function rng(seed) {
@@ -153,11 +153,9 @@
     out += '</defs>';
 
     /* palm and fingers */
-    out += `<path d="M30 330 L30 300 Q30 280 60 280 L440 280 Q470 280 470 300 L470 330 Z" fill="${SKIN}"/>`;
+    out += `<path d="M60 330 L60 300 Q60 280 90 280 L410 280 Q440 280 440 300 L440 330 Z" fill="${SKIN}"/>`;
     FINGERS.forEach(f => {
-      out += `<rect x="${f.x}" y="${f.tip}" width="${f.w}" height="${330 - f.tip + 20}" rx="${f.w / 2}" fill="${SKIN}" stroke="${SKIN_SH}" stroke-width="2"/>`;
-      const k = f.tip + f.w * 1.2 + 46; // knuckle creases
-      out += `<path d="M${f.x + f.w * 0.3} ${k} q${f.w * 0.2} 5 ${f.w * 0.4} 0 M${f.x + f.w * 0.34} ${k + 9} q${f.w * 0.16} 4 ${f.w * 0.32} 0" stroke="${SKIN_SH}" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+      out += `<rect x="${f.x}" y="${f.tip}" width="${f.w}" height="${330 - f.tip + 20}" rx="${f.w / 2}" fill="${SKIN}"/>`;
     });
 
     nails.forEach((n, i) => {
@@ -166,7 +164,6 @@
       c.acc2 = crazy ? pick(r, NEON.filter(x => x !== nb && x !== c.acc)) : (lum(nb) > 0.6 ? '#ffffff' : '#ff2e88');
       const path = nailPath(n.w, n.h, len.shape);
       out += `<g transform="translate(${n.x.toFixed(1)} ${n.y})">`;
-      out += `<path d="M-3 ${n.h - n.w * 0.42} Q-3 ${n.h + 5} ${n.w / 2} ${n.h + 5} Q${n.w + 3} ${n.h + 5} ${n.w + 3} ${n.h - n.w * 0.42}" fill="none" stroke="${SKIN_SH}" stroke-width="2"/>`;
       out += `<g clip-path="url(#${id}-nc${i})"><rect x="-4" y="-4" width="${n.w + 8}" height="${n.h + 8}" fill="${nb}"/>`;
       if (motifs[i]) out += M[motifs[i]](n.w, n.h, c, r);
       if (crazy && r() < 0.45) out += gem(n.w * 0.5, n.h * 0.84, 5, pick(r, ['#ff2e88', '#7b5cff', '#00d1c1']));
