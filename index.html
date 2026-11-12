@@ -3,192 +3,175 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Маникюр у Анны — студия ногтевого сервиса</title>
-<meta name="description" content="Аппаратный и комбинированный маникюр, покрытие гель-лаком, дизайн и укрепление ногтей. Запись онлайн.">
+<title>Liza Nails — маникюр, который не прячут в карман</title>
+<meta name="description" content="Маникюр, покрытие, наращивание и дизайн от лёгкого до крейзи-мудбордов. Онлайн-запись на свободные окна.">
+<meta name="theme-color" content="#ff2e88">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><ellipse cx='16' cy='14' rx='8' ry='11' fill='%23c98a8a'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M8 30V12C8 2 24 2 24 12v18z' fill='%23ff2e88' stroke='%23120a10' stroke-width='2.5'/></svg>">
 </head>
 <body>
 
 <header class="nav">
   <div class="wrap nav__in">
-    <a href="#top" class="logo">Anna<span>nails</span></a>
+    <a href="#top" class="logo">LIZA<span>nails</span></a>
     <nav class="nav__links">
-      <a href="#services">Услуги</a>
-      <a href="#works">Работы</a>
-      <a href="#about">Обо мне</a>
-      <a href="#reviews">Отзывы</a>
-      <a href="#contacts">Контакты</a>
+      <a href="#book">Запись</a>
+      <a href="#levels">Дизайн</a>
+      <a href="#prices">Цены</a>
+      <a href="#about">Лиза</a>
     </nav>
-    <a href="#booking" class="btn btn--small">Записаться</a>
+    <a href="#book" class="btn btn--sm">Хочу ногти</a>
   </div>
 </header>
 
 <main id="top">
 
-  <section class="hero">
-    <div class="wrap hero__in">
-      <div class="hero__text">
-        <p class="eyebrow">Маникюр · педикюр · дизайн</p>
-        <h1>Аккуратные ногти, <em>которые держатся</em> три недели</h1>
-        <p class="lead">Стерильные инструменты, бережный аппаратный маникюр и покрытие без сколов. Работаю одна, без потока — у вас целый час спокойствия.</p>
-        <div class="hero__cta">
-          <a href="#booking" class="btn">Записаться онлайн</a>
-          <a href="#services" class="btn btn--ghost">Цены</a>
-        </div>
-        <ul class="facts">
-          <li><b>7 лет</b><span>опыта</span></li>
-          <li><b>2 000+</b><span>клиентов</span></li>
-          <li><b>3 нед.</b><span>носка покрытия</span></li>
-        </ul>
-      </div>
-      <div class="hero__art" aria-hidden="true">
-        <div class="hand">
-          <i class="nail n1"></i><i class="nail n2"></i><i class="nail n3"></i><i class="nail n4"></i><i class="nail n5"></i>
-        </div>
-        <div class="blob"></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="services" class="section">
+  <!-- ── Запись: сразу сверху ─────────────────────────────── -->
+  <section class="hero" id="book">
     <div class="wrap">
-      <h2>Услуги и цены</h2>
-      <p class="sub">Цены фиксированные — без доплат «за сложность» по факту.</p>
-      <div class="services">
-        <article class="card">
-          <h3>Маникюр без покрытия</h3>
-          <p>Комбинированная обработка кутикулы, форма, полировка, уход маслом.</p>
-          <div class="card__foot"><span class="price">1 200 ₽</span><span class="time">45 мин</span></div>
-        </article>
-        <article class="card card--accent">
-          <span class="badge">Популярное</span>
-          <h3>Маникюр + гель-лак</h3>
-          <p>Обработка, выравнивание базой и однотонное покрытие из 120+ оттенков.</p>
-          <div class="card__foot"><span class="price">2 300 ₽</span><span class="time">1 ч 40 мин</span></div>
-        </article>
-        <article class="card">
-          <h3>Укрепление гелем</h3>
-          <p>Для тонких и ломких ногтей: натуральная длина, прочная архитектура.</p>
-          <div class="card__foot"><span class="price">2 800 ₽</span><span class="time">2 ч</span></div>
-        </article>
-        <article class="card">
-          <h3>Дизайн</h3>
-          <p>Френч, втирка, слайдеры, ручная роспись — от простого к сложному.</p>
-          <div class="card__foot"><span class="price">от 100 ₽</span><span class="time">за ноготь</span></div>
-        </article>
-        <article class="card">
-          <h3>Педикюр + гель-лак</h3>
-          <p>Аппаратная обработка стоп и пальцев, покрытие, увлажнение.</p>
-          <div class="card__foot"><span class="price">2 900 ₽</span><span class="time">1 ч 50 мин</span></div>
-        </article>
-        <article class="card">
-          <h3>Снятие и уход</h3>
-          <p>Аккуратное снятие покрытия аппаратом, без вреда ногтевой пластине.</p>
-          <div class="card__foot"><span class="price">400 ₽</span><span class="time">20 мин</span></div>
-        </article>
+      <div class="hero__head">
+        <h1>Ногти, на&nbsp;которые <span class="hl">оборачиваются</span></h1>
+        <p class="lead">Привет, я Лиза. Выбирай окно, услугу и&nbsp;степень безумия — я&nbsp;покажу, как это будет выглядеть, ещё до&nbsp;того, как ты придёшь.</p>
+        <span class="sticker">запись онлайн ✦ 24/7</span>
       </div>
-    </div>
-  </section>
 
-  <section id="works" class="section section--tint">
-    <div class="wrap">
-      <h2>Работы</h2>
-      <p class="sub">Немного из последнего. Больше — в&nbsp;Telegram-канале.</p>
-      <div class="gallery">
-        <figure class="tile" style="--a:#e8c4c0;--b:#f6e3df"><div class="mini"><i></i><i></i><i></i><i></i></div><figcaption>Нюд с блёсткой</figcaption></figure>
-        <figure class="tile" style="--a:#7a1f2b;--b:#a83a48"><div class="mini"><i></i><i></i><i></i><i></i></div><figcaption>Бордо</figcaption></figure>
-        <figure class="tile tile--french" style="--a:#f4e6dc;--b:#ffffff"><div class="mini"><i></i><i></i><i></i><i></i></div><figcaption>Френч</figcaption></figure>
-        <figure class="tile" style="--a:#b9c7b4;--b:#dfe7da"><div class="mini"><i></i><i></i><i></i><i></i></div><figcaption>Шалфей</figcaption></figure>
-        <figure class="tile tile--chrome" style="--a:#d9d4e8;--b:#f3eff9"><div class="mini"><i></i><i></i><i></i><i></i></div><figcaption>Жемчужная втирка</figcaption></figure>
-        <figure class="tile" style="--a:#2b2a33;--b:#4a4857"><div class="mini"><i></i><i></i><i></i><i></i></div><figcaption>Графит</figcaption></figure>
-      </div>
-    </div>
-  </section>
-
-  <section id="about" class="section">
-    <div class="wrap about">
-      <div class="about__photo" aria-hidden="true"><span>A</span></div>
-      <div>
-        <h2>Обо мне</h2>
-        <p>Меня зовут Анна, я мастер ногтевого сервиса с 2019 года. Прошла обучение аппаратному маникюру и архитектуре ногтя, регулярно повышаю квалификацию.</p>
-        <ul class="checks">
-          <li>Трёхэтапная стерилизация: дезинфекция, ультразвук, сухожар — крафт-пакет вскрываю при вас</li>
-          <li>Одноразовые пилки и бафы для каждого клиента</li>
-          <li>Материалы профессиональных брендов, без «noname» с маркетплейсов</li>
-          <li>Гарантия 7 дней: отслойка — исправлю бесплатно</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <section id="reviews" class="section section--tint">
-    <div class="wrap">
-      <h2>Отзывы</h2>
-      <div class="reviews">
-        <blockquote><p>«Хожу больше года — ни одного скола раньше трёх недель. И очень уютно.»</p><cite>Мария</cite></blockquote>
-        <blockquote><p>«Наконец-то мастер, который не режет кутикулу до крови. Аккуратно и быстро.»</p><cite>Екатерина</cite></blockquote>
-        <blockquote><p>«Сделала укрепление на свои тонкие ногти — отрастила длину впервые за много лет.»</p><cite>Ольга</cite></blockquote>
-      </div>
-    </div>
-  </section>
-
-  <section id="booking" class="section">
-    <div class="wrap booking">
-      <div>
-        <h2>Запись</h2>
-        <p class="sub">Оставьте заявку — напишу в течение часа и подберу время. Или сразу пишите в мессенджер.</p>
-        <div class="messengers">
-          <a class="btn" href="https://t.me/" target="_blank" rel="noopener">Telegram</a>
-          <a class="btn btn--ghost" href="https://wa.me/" target="_blank" rel="noopener">WhatsApp</a>
+      <form class="booker" id="booker" novalidate>
+        <!-- 1. Дата и время -->
+        <div class="step step--cal">
+          <div class="step__title"><b>01</b> Когда</div>
+          <div class="cal">
+            <div class="cal__nav">
+              <button type="button" class="iconbtn" id="prev" aria-label="Предыдущий месяц">←</button>
+              <span id="month-name"></span>
+              <button type="button" class="iconbtn" id="next" aria-label="Следующий месяц">→</button>
+            </div>
+            <div class="cal__wd"><span>пн</span><span>вт</span><span>ср</span><span>чт</span><span>пт</span><span>сб</span><span>вс</span></div>
+            <div class="cal__grid" id="cal"></div>
+            <p class="cal__msg" id="cal-msg">Загружаю свободные окна…</p>
+          </div>
+          <div class="times" id="times"></div>
         </div>
-      </div>
-      <form class="form" id="form">
-        <label>Имя<input name="name" required autocomplete="name"></label>
-        <label>Телефон<input name="phone" type="tel" required autocomplete="tel" placeholder="+7"></label>
-        <label>Услуга
-          <select name="service">
-            <option>Маникюр + гель-лак</option>
-            <option>Маникюр без покрытия</option>
-            <option>Укрепление гелем</option>
-            <option>Педикюр + гель-лак</option>
-            <option>Снятие и уход</option>
-          </select>
-        </label>
-        <label>Удобное время<input name="when" placeholder="например, будни после 18:00"></label>
-        <button class="btn" type="submit">Отправить заявку</button>
-        <p class="form__ok" id="ok" hidden>Спасибо! Заявка принята — скоро свяжусь с вами.</p>
+
+        <!-- 2. Услуга и дизайн -->
+        <div class="step step--svc">
+          <div class="step__title"><b>02</b> Что делаем</div>
+          <div class="pills" id="services"></div>
+
+          <div class="design" id="design-block">
+            <div class="step__sub">Дизайн</div>
+            <div class="levels" id="levels-pick"></div>
+            <div class="step__sub">Базовый цвет</div>
+            <div class="swatches" id="colors"></div>
+          </div>
+        </div>
+
+        <!-- превью -->
+        <div class="step step--preview">
+          <div class="preview">
+            <div class="preview__tag" id="preview-tag">лёгкий</div>
+            <svg id="hand" viewBox="0 0 500 330" role="img" aria-label="Примерный вид ногтей"></svg>
+            <div class="preview__bar">
+              <p id="preview-text"></p>
+              <button type="button" class="btn btn--ghost btn--sm" id="shuffle">↻ другой вариант</button>
+            </div>
+          </div>
+          <p class="note">Превью — примерное: показывает, насколько насыщенным будет дизайн. Точный рисунок подберём вместе по твоим референсам.</p>
+        </div>
+
+        <!-- 3. Референсы -->
+        <div class="step step--refs">
+          <div class="step__title"><b>03</b> Референсы <small>по желанию</small></div>
+          <label class="drop" id="drop">
+            <input type="file" id="files" accept="image/*" multiple hidden>
+            <span><b>+ фото</b> того, что нравится — Pinterest, скрины, чужие ногти. До 5 штук.</span>
+          </label>
+          <div class="thumbs" id="thumbs"></div>
+        </div>
+
+        <!-- 4. Контакты -->
+        <div class="step step--contact">
+          <div class="step__title"><b>04</b> Кто ты</div>
+          <div class="fields">
+            <label>Имя<input name="name" required maxlength="80" autocomplete="name"></label>
+            <label>Телефон<input name="phone" type="tel" required maxlength="32" autocomplete="tel" placeholder="+7 900 000-00-00"></label>
+            <label>Telegram / Instagram<input name="contact" maxlength="80" placeholder="@username — если удобнее писать"></label>
+            <label class="wide">Комментарий<textarea name="comment" rows="2" maxlength="1000" placeholder="длина, форма, аллергии, «сделай как на фото, но розовее»"></textarea></label>
+            <input name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          </div>
+        </div>
+
+        <div class="summary">
+          <div class="summary__text" id="summary">Выбери окно в календаре</div>
+          <button class="btn btn--big" type="submit" id="submit">Записаться</button>
+        </div>
+        <p class="form-err" id="form-err" role="alert"></p>
       </form>
+
+      <div class="done hidden" id="done">
+        <h2>Записала! 💅</h2>
+        <p id="done-text"></p>
+        <p>Я напишу или позвоню, чтобы подтвердить. Если планы поменяются — просто скажи.</p>
+        <button class="btn" type="button" id="again">Записать ещё кого-то</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true"><div class="marquee__in">
+    <span>гель-лак</span><span>✦</span><span>наращивание</span><span>✦</span><span>укрепление</span><span>✦</span><span>френч</span><span>✦</span><span>крейзи-мудборды</span><span>✦</span><span>гель-лак</span><span>✦</span><span>наращивание</span><span>✦</span><span>укрепление</span><span>✦</span><span>френч</span><span>✦</span><span>крейзи-мудборды</span><span>✦</span>
+  </div></div>
+
+  <!-- ── Уровни дизайна ───────────────────────────────────── -->
+  <section class="section" id="levels">
+    <div class="wrap">
+      <h2>Сколько безумия?</h2>
+      <p class="sub">Три уровня — от «на работу можно» до «на меня смотрит весь вагон».</p>
+      <div class="level-cards" id="level-cards"></div>
+    </div>
+  </section>
+
+  <!-- ── Цены ─────────────────────────────────────────────── -->
+  <section class="section section--pink" id="prices">
+    <div class="wrap">
+      <h2>Цены</h2>
+      <p class="sub">Без сюрпризов в конце: дизайн считается по уровню, а не «по сложности на глаз».</p>
+      <div class="price-grid">
+        <div class="price-list" id="price-list"></div>
+        <div class="price-list price-list--dark" id="design-prices"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── О Лизе ───────────────────────────────────────────── -->
+  <section class="section" id="about">
+    <div class="wrap about">
+      <div class="about__pic" aria-hidden="true"><svg id="about-hand" viewBox="0 0 500 330"></svg><span class="sticker sticker--alt">это я<br>делала</span></div>
+      <div>
+        <h2>Лиза</h2>
+        <p class="lead">Делаю ногти, которые не прячут в карман. Люблю сложные мудборды, но и аккуратный нюд на работу сделаю так, что он проходит три недели.</p>
+        <ul class="facts">
+          <li><b>Стерильно.</b> Сухожар и крафт-пакет, который вскрываю при тебе.</li>
+          <li><b>Носко.</b> Отслойка в первую неделю — исправлю бесплатно.</li>
+          <li><b>Честно.</b> Цена известна заранее — она прямо в форме записи.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
 </main>
 
-<footer id="contacts" class="footer">
+<footer class="footer">
   <div class="wrap footer__in">
-    <div>
-      <a href="#top" class="logo">Anna<span>nails</span></a>
-      <p>Москва, м. Пример, ул. Образцовая, 1 — 5 минут от метро</p>
-    </div>
-    <div>
-      <p><b>Ежедневно 10:00–21:00</b></p>
-      <p><a href="tel:+70000000000">+7 (000) 000-00-00</a></p>
-    </div>
+    <a href="#top" class="logo">LIZA<span>nails</span></a>
+    <p>Адрес и телефон пришлю при подтверждении записи</p>
+    <a href="#book" class="btn btn--pink">Записаться</a>
   </div>
-  <p class="wrap footer__copy">© <span id="y"></span> Anna nails</p>
+  <p class="wrap footer__copy">© <span id="year"></span> Liza Nails</p>
 </footer>
 
-<script>
-  document.getElementById('y').textContent = new Date().getFullYear();
-  document.getElementById('form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    // POC: заявки никуда не отправляются. Подключить Telegram-бота / Formspree.
-    this.querySelectorAll('input, select, button').forEach(function (el) { el.disabled = true; });
-    document.getElementById('ok').hidden = false;
-  });
-</script>
+<script src="nails.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
