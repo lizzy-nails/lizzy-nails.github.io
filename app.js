@@ -27,7 +27,8 @@
   const ADDONS = [
     { id: 'repair',  name: 'Ремонт ногтя',    price: 200 },
   ];
-  const COLORS = [
+  // запасной список, пока не ответил сервис: актуальные цвета Лиза ведёт на nails.b.net (/api/colors)
+  let COLORS = [
     ['#ff2e88', 'горячий розовый'], ['#ffc2d9', 'пудровый'], ['#e9c3b0', 'нюд'], ['#fff4ec', 'молочный'],
     ['#d4142f', 'красный'], ['#141014', 'чёрный'], ['#c9a7ff', 'лаванда'], ['#d7ff3a', 'кислотный лайм'],
   ];
@@ -133,6 +134,7 @@
     $('addons').innerHTML = ADDONS.map(a => `<button type="button" class="level${st.addons.includes(a.id) ? ' on' : ''}" data-add="${a.id}">${a.name}<small>+${fmt(a.price)}</small></button>`).join('');
     $('design-block').classList.toggle('off', !svc().design);
     $('levels-pick').innerHTML = LEVELS.map(l => `<button type="button" class="level${l.id === st.design ? ' on' : ''}${l.id === 'crazy' ? ' level--crazy' : ''}" data-lvl="${l.id}">${l.name}<small>${l.price ? '+' + fmt(l.price) : 'включено'}</small></button>`).join('');
+    $('colors').hidden = $('colors-title').hidden = !COLORS.length;
     $('colors').innerHTML = COLORS.map(([c, n]) => `<button type="button" class="swatch${c === st.color ? ' on' : ''}" data-color="${c}" style="--c:${c}" title="${n}" aria-label="${n}"></button>`).join('');
     preview();
     summary();
@@ -140,7 +142,7 @@
 
   function preview() {
     const l = lvl();
-    Nails.render($('hand'), { design: l.id, length: len().nails || 'short', color: st.color, seed: st.seed });
+    Nails.render($('hand'), { design: l.id, length: len().nails || 'short', color: st.color || '#ffc2d9', seed: st.seed });
     $('preview-tag').textContent = l.id ? l.name.toLowerCase() : (svc().design ? 'без дизайна' : 'без покрытия');
     $('preview-tag').classList.toggle('crazy', l.id === 'crazy');
     $('preview-text').textContent = svc().design ? l.text : 'Без покрытия: кутикула, форма, масло.';
@@ -310,4 +312,11 @@
 
   renderChoices();
   loadMonth('');
+  fetch(API + '/api/colors').then(r => r.ok ? r.json() : Promise.reject()).then(list => {
+    if (!Array.isArray(list)) return;
+    COLORS = list.filter(c => /^#[0-9a-f]{6}$/i.test(c.hex))
+      .map(c => [c.hex, String(c.name || '').replace(/[&<>"']/g, ch => '&#' + ch.charCodeAt(0) + ';')]);
+    if (!COLORS.some(([c]) => c === st.color)) st.color = COLORS.length ? COLORS[0][0] : '';
+    renderChoices();
+  }).catch(() => {}); // старый сервис без /api/colors — остаётся запасной список
 })();
