@@ -120,7 +120,10 @@ h3 { font-size: 1.15rem; font-weight: 700; }
 
 .design.off { opacity: .35; pointer-events: none; }
 .levels { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.levels--2 { grid-template-columns: repeat(2, 1fr); }
 .levels--3 { grid-template-columns: repeat(3, 1fr); }
+.levels--5 { grid-template-columns: repeat(5, 1fr); }
+.price-list .pl + h3 { margin-top: 18px; }
 .level {
   border: var(--b); border-radius: 14px; background: var(--white); padding: 10px 6px; cursor: pointer;
   font-family: var(--display); font-weight: 700; font-size: .82rem; text-align: center;
@@ -246,6 +249,7 @@ h3 { font-size: 1.15rem; font-weight: 700; }
   .step { padding: 16px; box-shadow: var(--sh-sm); }
   .pills, .fields { grid-template-columns: 1fr; }
   .levels { grid-template-columns: 1fr 1fr; }
+  .levels--5 { grid-template-columns: repeat(3, 1fr); }
   .cal__wd, .cal__grid { gap: 4px; }
   .summary { padding: 16px; }
   .summary .btn--big { width: 100%; }

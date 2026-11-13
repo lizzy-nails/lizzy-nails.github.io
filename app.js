@@ -5,23 +5,28 @@
 
   const API = new URLSearchParams(location.search).get('api') || 'https://berry-k3s.tail4064e5.ts.net:10000';
 
+  /* lengths[].nails — длина для превью и для сервиса записи (short | medium | long);
+     api — id услуги для сервиса, если он не знает её под своим id */
   const SERVICES = [
-    { id: 'manicure_gel', name: 'Маникюр + покрытие', price: 2300, time: '1 ч 45 мин', design: true },
-    { id: 'extension',    name: 'Наращивание',        price: 3500, time: '2 ч 30 мин', design: true },
-    { id: 'strengthen',   name: 'Укрепление + покрытие', price: 2700, time: '2 ч', design: true },
-    { id: 'pedicure',     name: 'Педикюр + покрытие', price: 2800, time: '1 ч 50 мин', design: true },
-    { id: 'manicure',     name: 'Маникюр без покрытия', price: 1200, time: '45 мин', design: false },
+    { id: 'manicure',     cat: 'Маникюр', name: 'Маникюр (без покрытия)', time: '45 мин', design: false, lengths: [{ price: 1500 }] },
+    { id: 'japanese',     cat: 'Маникюр', name: 'Японский маникюр', api: 'manicure', design: false, lengths: [{ price: 1600 }] },
+    { id: 'manicure_gel', cat: 'Маникюр + покрытие', name: 'Маникюр + покрытие', time: '1 ч 45 мин', design: true, lengths: [
+      { name: '1–2', price: 1700, nails: 'short' }, { name: '3–4', price: 1800, nails: 'medium' },
+    ] },
+    { id: 'extension',    cat: 'Наращивание', name: 'Наращивание', time: '2 ч 30 мин', design: true, lengths: [
+      { name: '1–2', price: 1800, nails: 'short' }, { name: '3', price: 1900, nails: 'medium' }, { name: '4', price: 2000, nails: 'medium' },
+      { name: '5', price: 2100, nails: 'long' }, { name: '6', price: 2200, nails: 'long' },
+    ] },
   ];
   const LEVELS = [
-    { id: '',       name: 'Без дизайна', price: 0,    text: 'Однотонное покрытие, идеально ровно.' },
-    { id: 'light',  name: 'Лёгкий',      price: 300,  text: 'Пара акцентов на 1–2 ногтях: полоска, цветок, точка, сердечко.' },
-    { id: 'medium', name: 'Средний',     price: 800,  text: 'Рисунок на каждом ногте: полоски, точки, френч, волны.' },
-    { id: 'crazy',  name: 'Крейзи',      price: 1800, text: 'Мудборд: на каждом ногте свой рисунок, яркие цвета, хром, стразы.' },
+    { id: '',       name: 'Без дизайна', price: 0,   text: 'Однотонное покрытие, идеально ровно.' },
+    { id: 'light',  name: 'Лёгкий',      full: 'Простой дизайн', price: 200, text: 'Пара акцентов на 1–2 ногтях: полоска, цветок, точка, сердечко.' },
+    { id: 'medium', name: 'Средний',     full: 'Дизайн средней сложности', price: 400, text: 'Рисунок на каждом ногте: полоски, точки, френч, волны.' },
+    { id: 'crazy',  name: 'Крейзи',      full: 'Дизайн крейзи', price: 600, text: 'Мудборд: на каждом ногте свой рисунок, яркие цвета, хром, стразы.' },
   ];
-  const LENGTHS = [
-    { id: 'short',  name: 'Короткие', text: 'чуть за край пальца' },
-    { id: 'medium', name: 'Средние',  text: 'заметно длиннее пальца' },
-    { id: 'long',   name: 'Длинные',  text: 'длинные, миндаль' },
+  const ADDONS = [
+    { id: 'removal', name: 'Снятие покрытия', price: 500 },
+    { id: 'repair',  name: 'Ремонт ногтя',    price: 200 },
   ];
   const COLORS = [
     ['#ff2e88', 'горячий розовый'], ['#ffc2d9', 'пудровый'], ['#e9c3b0', 'нюд'], ['#fff4ec', 'молочный'],
@@ -43,7 +48,7 @@
   const fmt = n => n.toLocaleString('ru-RU') + ' ₽';
   const st = {
     month: '', months: [], free: {}, today: '',
-    date: '', time: '', service: 'manicure_gel', length: 'medium', design: 'light', color: COLORS[0][0],
+    date: '', time: '', service: 'manicure_gel', length: 0, design: 'light', color: COLORS[0][0], addons: [],
     seed: 7, photos: [], // { blob, url }
   };
 
@@ -116,10 +121,17 @@
   /* ── service, design, colour ───────────────────────── */
   const svc = () => SERVICES.find(s => s.id === st.service);
   const lvl = () => LEVELS.find(l => l.id === (svc().design ? st.design : ''));
+  const len = () => svc().lengths[st.length] || svc().lengths[0];
+  const adds = () => ADDONS.filter(a => st.addons.includes(a.id));
+  const from = s => (s.lengths.length > 1 ? 'от ' : '') + fmt(s.lengths[0].price);
 
   function renderChoices() {
-    $('services').innerHTML = SERVICES.map(s => `<button type="button" class="pill pill--svc${s.id === st.service ? ' on' : ''}" data-svc="${s.id}"><b>${s.name}</b><small>${fmt(s.price)} · ${s.time}</small></button>`).join('');
-    $('lengths').innerHTML = LENGTHS.map(l => `<button type="button" class="level${l.id === st.length ? ' on' : ''}" data-len="${l.id}">${l.name}<small>${l.text}</small></button>`).join('');
+    $('services').innerHTML = SERVICES.map(s => `<button type="button" class="pill pill--svc${s.id === st.service ? ' on' : ''}" data-svc="${s.id}"><b>${s.name}</b><small>${from(s)}${s.time ? ' · ' + s.time : ''}</small></button>`).join('');
+    const ls = svc().lengths;
+    $('length-block').hidden = ls.length < 2;
+    $('lengths').className = 'levels levels--' + ls.length;
+    $('lengths').innerHTML = ls.map((l, i) => `<button type="button" class="level${i === st.length ? ' on' : ''}" data-len="${i}">${l.name}<small>${fmt(l.price)}</small></button>`).join('');
+    $('addons').innerHTML = ADDONS.map(a => `<button type="button" class="level${st.addons.includes(a.id) ? ' on' : ''}" data-add="${a.id}">${a.name}<small>+${fmt(a.price)}</small></button>`).join('');
     $('design-block').classList.toggle('off', !svc().design);
     $('levels-pick').innerHTML = LEVELS.map(l => `<button type="button" class="level${l.id === st.design ? ' on' : ''}${l.id === 'crazy' ? ' level--crazy' : ''}" data-lvl="${l.id}">${l.name}<small>${l.price ? '+' + fmt(l.price) : 'включено'}</small></button>`).join('');
     $('colors').innerHTML = COLORS.map(([c, n]) => `<button type="button" class="swatch${c === st.color ? ' on' : ''}" data-color="${c}" style="--c:${c}" title="${n}" aria-label="${n}"></button>`).join('');
@@ -129,21 +141,28 @@
 
   function preview() {
     const l = lvl();
-    Nails.render($('hand'), { design: l.id, length: st.length, color: st.color, seed: st.seed });
+    Nails.render($('hand'), { design: l.id, length: len().nails || 'short', color: st.color, seed: st.seed });
     $('preview-tag').textContent = l.id ? l.name.toLowerCase() : (svc().design ? 'без дизайна' : 'без покрытия');
     $('preview-tag').classList.toggle('crazy', l.id === 'crazy');
     $('preview-text').textContent = svc().design ? l.text : 'Без покрытия: ухоженные ногти, кутикула, форма, масло.';
     $('shuffle').hidden = !l.id;
-    if (!svc().design) Nails.render($('hand'), { design: '', length: st.length, color: '#f7d6cf', seed: 1 });
+    if (!svc().design) Nails.render($('hand'), { design: '', length: 'short', color: '#f7d6cf', seed: 1 });
   }
 
   $('services').addEventListener('click', e => {
     const b = e.target.closest('[data-svc]');
-    if (b) { st.service = b.dataset.svc; renderChoices(); }
+    if (b) { st.service = b.dataset.svc; if (st.length >= svc().lengths.length) st.length = 0; renderChoices(); }
   });
   $('lengths').addEventListener('click', e => {
     const b = e.target.closest('[data-len]');
-    if (b) { st.length = b.dataset.len; renderChoices(); }
+    if (b) { st.length = +b.dataset.len; renderChoices(); }
+  });
+  $('addons').addEventListener('click', e => {
+    const b = e.target.closest('[data-add]');
+    if (!b) return;
+    const id = b.dataset.add;
+    st.addons = st.addons.includes(id) ? st.addons.filter(x => x !== id) : [...st.addons, id];
+    renderChoices();
   });
   $('levels-pick').addEventListener('click', e => {
     const b = e.target.closest('[data-lvl]');
@@ -156,15 +175,15 @@
   $('shuffle').onclick = () => { st.seed = Math.floor(Math.random() * 1e6); preview(); };
 
   function summary() {
-    const s = svc(), l = lvl();
-    const total = s.price + l.price;
+    const s = svc(), l = lvl(), a = adds();
+    const total = len().price + l.price + a.reduce((n, x) => n + x.price, 0);
     let when = 'Выбери окно в календаре';
     if (st.date) {
       const [y, m, d] = st.date.split('-').map(Number);
       when = `${d} ${MONTHS_GEN[m - 1]}, ${WD[new Date(y, m - 1, d).getDay()]}` + (st.time ? ` в ${st.time}` : ' — выбери время');
     }
-    const len = LENGTHS.find(x => x.id === st.length).name.toLowerCase();
-    $('summary').innerHTML = `<b>${when}</b><span>${s.name} · ${len}${l.id ? ' · дизайн «' + l.name.toLowerCase() + '»' : ''}</span><strong>${l.id === 'crazy' ? 'от ' : ''}${fmt(total)}</strong>`;
+    const what = [s.name, len().name && 'длина ' + len().name, l.id && 'дизайн «' + l.name.toLowerCase() + '»', ...a.map(x => x.name.toLowerCase())];
+    $('summary').innerHTML = `<b>${when}</b><span>${what.filter(Boolean).join(' · ')}</span><strong>${l.id === 'crazy' ? 'от ' : ''}${fmt(total)}</strong>`;
     $('submit').disabled = !(st.date && st.time);
   }
 
@@ -218,10 +237,13 @@
     if (f.phone.value.replace(/\D/g, '').length < 10) { err.textContent = ERRORS.BAD_PHONE; f.phone.focus(); return; }
 
     const fd = new FormData();
-    const l = lvl();
+    const s = svc(), l = lvl();
+    // сервис знает только старые id услуг и short/medium/long — точную услугу, длину и доп. услуги пишем в комментарий
+    const extra = [s.api && s.name, len().name && 'длина ' + len().name, ...adds().map(x => x.name.toLowerCase())].filter(Boolean);
     Object.entries({
-      date: st.date, time: st.time, service: st.service, length: st.length, design: l.id, color: svc().design ? st.color : '',
-      name: f.name.value, phone: f.phone.value, contact: f.contact.value, comment: f.comment.value, website: f.website.value,
+      date: st.date, time: st.time, service: s.api || s.id, length: len().nails || 'short', design: l.id, color: s.design ? st.color : '',
+      name: f.name.value, phone: f.phone.value, contact: f.contact.value, website: f.website.value,
+      comment: (extra.length ? `[${extra.join('; ')}] ` : '') + f.comment.value,
     }).forEach(([k, v]) => fd.append(k, v));
     st.photos.forEach((p, i) => fd.append('photos', p.blob, `ref${i + 1}.jpg`));
 
@@ -250,7 +272,7 @@
   $('again').onclick = () => {
     $('booker').reset();
     st.photos.forEach(p => URL.revokeObjectURL(p.url));
-    st.photos = []; st.date = ''; st.time = '';
+    st.photos = []; st.date = ''; st.time = ''; st.addons = [];
     renderThumbs();
     $('done').classList.add('hidden');
     $('booker').classList.remove('hidden');
@@ -271,14 +293,20 @@
   $('level-cards').addEventListener('click', e => {
     const b = e.target.closest('[data-pick]');
     if (!b) return;
-    if (!svc().design) st.service = 'manicure_gel';
+    if (!svc().design) { st.service = 'manicure_gel'; st.length = 0; }
     st.design = b.dataset.pick;
     renderChoices();
     $('book').scrollIntoView({ behavior: 'smooth' });
   });
 
-  $('price-list').innerHTML = '<h3>Услуги</h3>' + SERVICES.map(s => `<div class="pl"><span>${s.name}<small>${s.time}</small></span><b>${fmt(s.price)}</b></div>`).join('');
-  $('design-prices').innerHTML = '<h3>Дизайн</h3>' + LEVELS.map(l => `<div class="pl"><span>${l.name}<small>${l.text}</small></span><b>${l.price ? (l.id === 'crazy' ? 'от ' : '+') + fmt(l.price) : '—'}</b></div>`).join('');
+  const row = (name, note, price) => `<div class="pl"><span>${name}${note ? `<small>${note}</small>` : ''}</span><b>${price}</b></div>`;
+  $('price-list').innerHTML = [...new Set(SERVICES.map(s => s.cat))].map(c => `<h3>${c}</h3>` + SERVICES.filter(s => s.cat === c).map(s =>
+    s.lengths.length > 1
+      ? s.lengths.map((l, i) => row('Длина ' + l.name, i ? '' : s.time, fmt(l.price))).join('')
+      : row(s.name, s.time, fmt(s.lengths[0].price))).join('')).join('');
+  $('design-prices').innerHTML = '<h3>Дополнительные услуги</h3>'
+    + LEVELS.filter(l => l.id).map(l => row(l.full, l.text, (l.id === 'crazy' ? 'от ' : '+') + fmt(l.price))).join('')
+    + ADDONS.map(a => row(a.name, '', fmt(a.price))).join('');
   $('year').textContent = new Date().getFullYear();
 
   renderChoices();
