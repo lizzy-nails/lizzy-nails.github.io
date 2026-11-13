@@ -8,12 +8,12 @@
   /* lengths[].nails — длина для превью и для сервиса записи (short | medium | long);
      api — id услуги для сервиса, если он не знает её под своим id */
   const SERVICES = [
-    { id: 'manicure',     cat: 'Маникюр', name: 'Маникюр (без покрытия)', time: '45 мин', design: false, lengths: [{ price: 1500 }] },
-    { id: 'japanese',     cat: 'Маникюр', name: 'Японский маникюр', api: 'manicure', design: false, lengths: [{ price: 1600 }] },
-    { id: 'manicure_gel', cat: 'Маникюр + покрытие', name: 'Маникюр + покрытие', time: '1 ч 45 мин', design: true, lengths: [
+    { id: 'manicure',     cat: 'Маникюр', name: 'Маникюр (без покрытия)', time: '50 мин', design: false, lengths: [{ price: 1500 }] },
+    { id: 'japanese',     cat: 'Маникюр', name: 'Японский маникюр', time: '50 мин', api: 'manicure', design: false, lengths: [{ price: 1600 }] },
+    { id: 'manicure_gel', cat: 'Маникюр + покрытие', name: 'Маникюр + покрытие', time: '1 ч 30 мин – 2 ч', design: true, lengths: [
       { name: '1–2', price: 1700, nails: 'short' }, { name: '3–4', price: 1800, nails: 'medium' },
     ] },
-    { id: 'extension',    cat: 'Наращивание', name: 'Наращивание', time: '2 ч 30 мин', design: true, lengths: [
+    { id: 'extension',    cat: 'Наращивание', name: 'Наращивание', time: '2 ч 30 мин – 3 ч 30 мин', design: true, lengths: [
       { name: '1–2', price: 1800, nails: 'short' }, { name: '3', price: 1900, nails: 'medium' }, { name: '4', price: 2000, nails: 'medium' },
       { name: '5', price: 2100, nails: 'long' }, { name: '6', price: 2200, nails: 'long' },
     ] },
@@ -302,7 +302,7 @@
   const row = (name, note, price) => `<div class="pl"><span>${name}${note ? `<small>${note}</small>` : ''}</span><b>${price}</b></div>`;
   $('price-list').innerHTML = [...new Set(SERVICES.map(s => s.cat))].map(c => `<h3>${c}</h3>` + SERVICES.filter(s => s.cat === c).map(s =>
     s.lengths.length > 1
-      ? s.lengths.map((l, i) => row('Длина ' + l.name, i ? '' : s.time, fmt(l.price))).join('')
+      ? s.lengths.map(l => row('Длина ' + l.name, s.time, fmt(l.price))).join('')
       : row(s.name, s.time, fmt(s.lengths[0].price))).join('')).join('');
   $('design-prices').innerHTML = '<h3>Дополнительные услуги</h3>'
     + LEVELS.filter(l => l.id).map(l => row(l.full, l.text, (l.id === 'crazy' ? 'от ' : '+') + fmt(l.price))).join('')
