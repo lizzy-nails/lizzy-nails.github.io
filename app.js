@@ -10,22 +10,21 @@
   const SERVICES = [
     { id: 'manicure',     cat: 'Маникюр', name: 'Маникюр (без покрытия)', time: '50 мин', design: false, lengths: [{ price: 1500 }] },
     { id: 'japanese',     cat: 'Маникюр', name: 'Японский маникюр', time: '50 мин', api: 'manicure', design: false, lengths: [{ price: 1600 }] },
-    { id: 'manicure_gel', cat: 'Маникюр + покрытие', name: 'Маникюр + покрытие', time: '1 ч 30 мин – 2 ч', design: true, lengths: [
+    { id: 'manicure_gel', cat: 'Маникюр + покрытие', name: 'Маникюр + покрытие', time: '1 ч 30 мин – 2 ч', incl: 'снятие включено', design: true, lengths: [
       { name: '1–2', price: 1700, nails: 'short' }, { name: '3–4', price: 1800, nails: 'medium' },
     ] },
-    { id: 'extension',    cat: 'Наращивание', name: 'Наращивание', time: '2 ч 30 мин – 3 ч 30 мин', design: true, lengths: [
+    { id: 'extension',    cat: 'Наращивание', name: 'Наращивание', time: '2 ч 30 мин – 3 ч 30 мин', incl: 'снятие включено', design: true, lengths: [
       { name: '1–2', price: 1800, nails: 'short' }, { name: '3', price: 1900, nails: 'medium' }, { name: '4', price: 2000, nails: 'medium' },
       { name: '5', price: 2100, nails: 'long' }, { name: '6', price: 2200, nails: 'long' },
     ] },
   ];
   const LEVELS = [
     { id: '',       name: 'Без дизайна', price: 0,   text: 'Однотонное покрытие без рисунка.' },
-    { id: 'light',  name: 'Лёгкий',      full: 'Простой дизайн', price: 200, text: 'Пара акцентов на 1–2 ногтях: полоска, цветок, точка, сердечко.' },
-    { id: 'medium', name: 'Средний',     full: 'Дизайн средней сложности', price: 400, text: 'Рисунок на каждом ногте: полоски, точки, френч, волны.' },
-    { id: 'crazy',  name: 'Крейзи',      full: 'Дизайн крейзи', price: 600, text: 'Мудборд: на каждом ногте свой рисунок, яркие цвета, хром, стразы.' },
+    { id: 'light',  name: 'Лёгкий',      full: 'Простой дизайн', price: 200, text: 'Френч, слайдеры, полоски, точки, сердечки и т. д.' },
+    { id: 'medium', name: 'Средний',     full: 'Дизайн средней сложности', price: 400, text: 'Дизайн средней сложности.' },
+    { id: 'crazy',  name: 'Крейзи',      full: 'Дизайн крейзи', price: 600, text: 'Дизайн по мудборду.' },
   ];
   const ADDONS = [
-    { id: 'removal', name: 'Снятие покрытия', price: 500 },
     { id: 'repair',  name: 'Ремонт ногтя',    price: 200 },
   ];
   const COLORS = [
@@ -126,7 +125,7 @@
   const from = s => (s.lengths.length > 1 ? 'от ' : '') + fmt(s.lengths[0].price);
 
   function renderChoices() {
-    $('services').innerHTML = SERVICES.map(s => `<button type="button" class="pill pill--svc${s.id === st.service ? ' on' : ''}" data-svc="${s.id}"><b>${s.name}</b><small>${from(s)}${s.time ? ' · ' + s.time : ''}</small></button>`).join('');
+    $('services').innerHTML = SERVICES.map(s => `<button type="button" class="pill pill--svc${s.id === st.service ? ' on' : ''}" data-svc="${s.id}"><b>${s.name}</b><small>${[from(s), s.time, s.incl].filter(Boolean).join(' · ')}</small></button>`).join('');
     const ls = svc().lengths;
     $('length-block').hidden = ls.length < 2;
     $('lengths').className = 'levels levels--' + ls.length;
@@ -302,7 +301,7 @@
   const row = (name, note, price) => `<div class="pl"><span>${name}${note ? `<small>${note}</small>` : ''}</span><b>${price}</b></div>`;
   $('price-list').innerHTML = [...new Set(SERVICES.map(s => s.cat))].map(c => `<h3>${c}</h3>` + SERVICES.filter(s => s.cat === c).map(s =>
     s.lengths.length > 1
-      ? s.lengths.map(l => row('Длина ' + l.name, s.time, fmt(l.price))).join('')
+      ? s.lengths.map(l => row('Длина ' + l.name, [s.time, s.incl].filter(Boolean).join(' · '), fmt(l.price))).join('')
       : row(s.name, s.time, fmt(s.lengths[0].price))).join('')).join('');
   $('design-prices').innerHTML = '<h3>Дополнительные услуги</h3>'
     + LEVELS.filter(l => l.id).map(l => row(l.full, l.text, (l.id === 'crazy' ? 'от ' : '+') + fmt(l.price))).join('')
