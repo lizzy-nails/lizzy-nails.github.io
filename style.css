@@ -27,7 +27,7 @@ html { overflow-x: clip; }
 a { color: inherit; }
 button { font: inherit; color: inherit; }
 h1, h2, h3 { font-family: var(--display); line-height: 1.02; margin: 0 0 .4em; letter-spacing: -.02em; }
-h1 { font-size: min(5.2rem, max(6.4vw, min(2.3rem, 8vw - 2.6px))); /* «оборачиваются» fits a phone */ font-weight: 900; text-transform: uppercase; }
+h1 { font-size: min(5.2rem, max(6.4vw, min(2.3rem, 8vw - 2.6px))); /* «наращивание» fits a phone */ font-weight: 900; text-transform: uppercase; }
 h2 { font-size: clamp(1.9rem, 4.6vw, 3.4rem); font-weight: 900; text-transform: uppercase; }
 h3 { font-size: 1.15rem; font-weight: 700; }
 .hidden { display: none !important; }

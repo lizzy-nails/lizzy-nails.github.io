@@ -19,7 +19,7 @@
     ] },
   ];
   const LEVELS = [
-    { id: '',       name: 'Без дизайна', price: 0,   text: 'Однотонное покрытие, идеально ровно.' },
+    { id: '',       name: 'Без дизайна', price: 0,   text: 'Однотонное покрытие без рисунка.' },
     { id: 'light',  name: 'Лёгкий',      full: 'Простой дизайн', price: 200, text: 'Пара акцентов на 1–2 ногтях: полоска, цветок, точка, сердечко.' },
     { id: 'medium', name: 'Средний',     full: 'Дизайн средней сложности', price: 400, text: 'Рисунок на каждом ногте: полоски, точки, френч, волны.' },
     { id: 'crazy',  name: 'Крейзи',      full: 'Дизайн крейзи', price: 600, text: 'Мудборд: на каждом ногте свой рисунок, яркие цвета, хром, стразы.' },
@@ -144,7 +144,7 @@
     Nails.render($('hand'), { design: l.id, length: len().nails || 'short', color: st.color, seed: st.seed });
     $('preview-tag').textContent = l.id ? l.name.toLowerCase() : (svc().design ? 'без дизайна' : 'без покрытия');
     $('preview-tag').classList.toggle('crazy', l.id === 'crazy');
-    $('preview-text').textContent = svc().design ? l.text : 'Без покрытия: ухоженные ногти, кутикула, форма, масло.';
+    $('preview-text').textContent = svc().design ? l.text : 'Без покрытия: кутикула, форма, масло.';
     $('shuffle').hidden = !l.id;
     if (!svc().design) Nails.render($('hand'), { design: '', length: 'short', color: '#f7d6cf', seed: 1 });
   }
