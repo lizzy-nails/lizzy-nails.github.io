@@ -16,8 +16,11 @@
     { id: 'extension',    cat: 'Наращивание', name: 'Наращивание', time: '2 ч 30 мин – 3 ч 30 мин', incl: 'снятие включено', design: true, lengths: [
       { name: '1–2', price: 1800, nails: 'short' }, { name: '3', price: 1900, nails: 'medium' }, { name: '4', price: 2000, nails: 'medium' },
       { name: '5', price: 2100, nails: 'long' }, { name: '6', price: 2200, nails: 'long' },
-    ] },
+    ] },    { id: 'removal',      cat: 'Снятие', name: 'Снятие покрытия', time: '30 мин', api: 'manicure', design: false, lengths: [{ price: 500 }] },
   ];
+  /* Портфолио: положи фото в папку works/ и впиши имена сюда, например 'works/01.jpg'.
+     Пока список пуст, коллаж собирается из нарисованных превью. */
+  const WORKS = [];
   const LEVELS = [
     { id: '',       name: 'Без дизайна', price: 0,   text: 'Однотонное покрытие без рисунка.' },
     { id: 'light',  name: 'Лёгкий',      full: 'Простой дизайн', price: 200, text: 'Френч, слайдеры, полоски, точки, сердечки и т. д.' },
@@ -308,6 +311,26 @@
   $('design-prices').innerHTML = '<h3>Дополнительные услуги</h3>'
     + LEVELS.filter(l => l.id).map(l => row(l.full, l.text, (l.id === 'crazy' ? 'от ' : '+') + fmt(l.price))).join('')
     + ADDONS.map(a => row(a.name, '', fmt(a.price))).join('');
+  /* ── портфолио: два ряда коллажа едут навстречу ─────── */
+  (function works() {
+    const designs = ['light', 'medium', 'crazy'], lens = ['short', 'medium', 'long'];
+    const tiles = WORKS.length
+      ? WORKS.map((src, i) => ({ src, i }))
+      : Array.from({ length: 12 }, (_, i) => ({ i }));
+    const half = Math.ceil(tiles.length / 2);
+    const tile = t => t.src
+      ? `<figure class="work work--${t.i % 3}"><img src="${t.src}" alt="Работа Лизы" loading="lazy"></figure>`
+      : `<figure class="work work--${t.i % 3}"><svg data-w="${t.i}" viewBox="0 0 500 330" aria-hidden="true"></svg></figure>`;
+    // каждый ряд повторён дважды, чтобы анимация сдвига на -50% шла без шва
+    $('works').innerHTML = [tiles.slice(0, half), tiles.slice(half)].map((row, r) =>
+      `<div class="works__row${r ? ' works__row--rev' : ''}"><div class="works__track">${row.map(tile).join('')}${row.map(tile).join('')}</div></div>`).join('');
+    if (WORKS.length) return;
+    $('works').querySelectorAll('svg[data-w]').forEach(svg => {
+      const i = +svg.dataset.w;
+      Nails.render(svg, { design: designs[i % 3], length: lens[(i * 2) % 3], color: COLORS[(i * 3) % COLORS.length][0], seed: 100 + i * 17 });
+    });
+  })();
+
   $('year').textContent = new Date().getFullYear();
 
   renderChoices();
