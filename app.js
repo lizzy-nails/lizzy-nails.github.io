@@ -18,9 +18,34 @@
       { name: '5', price: 2100, nails: 'long' }, { name: '6', price: 2200, nails: 'long' },
     ] },    { id: 'removal',      cat: 'Снятие', name: 'Снятие покрытия', time: '30 мин', api: 'manicure', design: false, lengths: [{ price: 500 }] },
   ];
-  /* Портфолио: положи фото в папку works/ и впиши имена сюда, например 'works/01.jpg'.
-     Пока список пуст, коллаж собирается из нарисованных превью. */
-  const WORKS = [];
+  /* Портфолио: фото лежат в works/NN.jpg (до 640 px по высоте). [имя, ширина, высота];
+     если список пуст, коллаж собирается из нарисованных превью. */
+  const WORKS = [
+    ['01', 480, 640],
+    ['02', 871, 640],
+    ['03', 853, 640],
+    ['04', 480, 640],
+    ['05', 854, 640],
+    ['06', 480, 640],
+    ['07', 480, 640],
+    ['08', 480, 640],
+    ['09', 480, 640],
+    ['10', 960, 634],
+    ['11', 480, 640],
+    ['12', 480, 640],
+    ['13', 480, 640],
+    ['14', 960, 617],
+    ['15', 853, 640],
+    ['16', 480, 640],
+    ['17', 853, 640],
+    ['18', 480, 640],
+    ['19', 480, 640],
+    ['20', 480, 640],
+    ['21', 581, 640],
+    ['22', 756, 640],
+    ['23', 480, 640],
+    ['24', 480, 640],
+  ];
   const LEVELS = [
     { id: '',       name: 'Без дизайна', price: 0,   text: 'Однотонное покрытие без рисунка.' },
     { id: 'light',  name: 'Лёгкий',      full: 'Простой дизайн', price: 200, text: 'Френч, слайдеры, полоски, точки, сердечки и т. д.' },
@@ -315,16 +340,32 @@
   (function works() {
     const designs = ['light', 'medium', 'crazy'], lens = ['short', 'medium', 'long'];
     const tiles = WORKS.length
-      ? WORKS.map((src, i) => ({ src, i }))
+      ? WORKS.map(([n, w, h], i) => ({ src: `works/${n}.jpg`, w, h, i }))
       : Array.from({ length: 12 }, (_, i) => ({ i }));
     const half = Math.ceil(tiles.length / 2);
     const tile = t => t.src
-      ? `<figure class="work work--${t.i % 3}"><img src="${t.src}" alt="Работа Лизы" loading="lazy"></figure>`
+      ? `<figure class="work work--photo work--${t.i % 3}"><img src="${t.src}" width="${t.w}" height="${t.h}" alt="Работа Лизы" loading="lazy" decoding="async"></figure>`
       : `<figure class="work work--${t.i % 3}"><svg data-w="${t.i}" viewBox="0 0 500 330" aria-hidden="true"></svg></figure>`;
     // каждый ряд повторён дважды, чтобы анимация сдвига на -50% шла без шва
     $('works').innerHTML = [tiles.slice(0, half), tiles.slice(half)].map((row, r) =>
       `<div class="works__row${r ? ' works__row--rev' : ''}"><div class="works__track">${row.map(tile).join('')}${row.map(tile).join('')}</div></div>`).join('');
-    if (WORKS.length) return;
+    if (WORKS.length) {
+      // по клику — крупно; закрывается кликом или Esc
+      const box = document.createElement('div');
+      box.className = 'lightbox hidden';
+      box.innerHTML = '<img alt="Работа Лизы">';
+      document.body.append(box);
+      const close = () => box.classList.add('hidden');
+      box.onclick = close;
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+      $('works').addEventListener('click', e => {
+        const img = e.target.closest('.work img');
+        if (!img) return;
+        box.firstChild.src = img.src;
+        box.classList.remove('hidden');
+      });
+      return;
+    }
     $('works').querySelectorAll('svg[data-w]').forEach(svg => {
       const i = +svg.dataset.w;
       Nails.render(svg, { design: designs[i % 3], length: lens[(i * 2) % 3], color: COLORS[(i * 3) % COLORS.length][0], seed: 100 + i * 17 });
