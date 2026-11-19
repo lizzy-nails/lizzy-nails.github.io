@@ -10,13 +10,14 @@
   const SERVICES = [
     { id: 'manicure',     cat: 'Маникюр', name: 'Маникюр (без покрытия)', time: '50 мин', design: false, lengths: [{ price: 1500 }] },
     { id: 'japanese',     cat: 'Маникюр', name: 'Японский маникюр', time: '50 мин', api: 'manicure', design: false, lengths: [{ price: 1600 }] },
+    { id: 'removal',      cat: 'Маникюр', name: 'Снятие покрытия', time: '30 мин', api: 'manicure', design: false, lengths: [{ price: 500 }] },
     { id: 'manicure_gel', cat: 'Маникюр + покрытие', name: 'Маникюр + покрытие', time: '1 ч 30 мин – 2 ч', incl: 'снятие включено', design: true, lengths: [
       { name: '1–2', price: 1700, nails: 'short' }, { name: '3–4', price: 1800, nails: 'medium' },
     ] },
     { id: 'extension',    cat: 'Наращивание', name: 'Наращивание', time: '2 ч 30 мин – 3 ч 30 мин', incl: 'снятие включено', design: true, lengths: [
       { name: '1–2', price: 1800, nails: 'short' }, { name: '3', price: 1900, nails: 'medium' }, { name: '4', price: 2000, nails: 'medium' },
       { name: '5', price: 2100, nails: 'long' }, { name: '6', price: 2200, nails: 'long' },
-    ] },    { id: 'removal',      cat: 'Снятие', name: 'Снятие покрытия', time: '30 мин', api: 'manicure', design: false, lengths: [{ price: 500 }] },
+    ] },
   ];
   /* Портфолио: фото лежат в works/NN.jpg (до 640 px по высоте). [имя, ширина, высота];
      если список пуст, коллаж собирается из нарисованных превью. */
