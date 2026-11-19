@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M8 3h7v19h11v7H8z' fill='%23ff2e88' stroke='%23120a10' stroke-width='2' stroke-linejoin='round'/></svg>">
 </head>
@@ -23,6 +24,7 @@
       <a href="#levels">Дизайн</a>
       <a href="#prices">Цены</a>
       <a href="#about">Лиза</a>
+      <a href="#where">Адрес</a>
     </nav>
     <a href="#book" class="btn btn--sm">Записаться</a>
   </div>
@@ -119,7 +121,7 @@
             <label class="wide">Комментарий<textarea name="comment" rows="2" maxlength="900" placeholder="форма, аллергии, пожелания"></textarea></label>
             <input name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
           </div>
-          <p class="contact-note">Принимаю с&nbsp;16 лет. Адрес и телефон пришлю при подтверждении записи.<br><span class="contact-note__film">Снимаю процесс маникюра на телефон — будь к этому готова.</span></p>
+          <p class="contact-note">Принимаю с&nbsp;16 лет. Как найти и телефон пришлю при подтверждении записи.<br><span class="contact-note__film">Снимаю процесс маникюра на телефон — будь к этому готова.</span></p>
         </div>
 
         </div>
@@ -190,6 +192,23 @@
     </div>
   </section>
 
+  <!-- ── Где я ────────────────────────────────────────────── -->
+  <section class="section section--where" id="where">
+    <div class="wrap">
+      <h2>Где я</h2>
+      <p class="sub">Приокский район Нижнего Новгорода, посёлок Новинки.</p>
+      <div class="where">
+        <div class="where__card">
+          <h3>Новинки</h3>
+          <p>Инженерный проезд, д.&nbsp;1 к.&nbsp;1<br>ЖК «Акварель», Приокский район</p>
+          <p>Подъезд и как пройти — напишу при подтверждении записи.</p>
+          <a class="btn btn--pink" href="https://yandex.ru/maps/?rtext=~56.19417,43.88998&amp;rtt=auto" target="_blank" rel="noopener">Маршрут в&nbsp;Яндекс Картах</a>
+        </div>
+        <div class="map" id="map" role="region" aria-label="Карта: Новинки, Инженерный проезд, 1 к1"></div>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="footer">
@@ -215,5 +234,7 @@
 
 <script src="nails.js"></script>
 <script src="app.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+<script src="map.js" defer></script>
 </body>
 </html>

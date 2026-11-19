@@ -80,6 +80,15 @@
     return list.map(c => [c, key(c)]).sort((a, b) => a[1][0] - b[1][0] || a[1][1] - b[1][1]).map(([c]) => c);
   }
   COLORS = rainbow(COLORS);
+  /* базы есть всегда, независимо от списка на b.net: на сайте — квадратиками перед лаками.
+     [hex, название, подпись, цвет для превью]; hex как у этих баз на b.net, одноимённые цвета оттуда не дублируем */
+  const BASES = [
+    ['#fffafa', 'прозрачный', 'база, есть всегда', '#f6e4dd'],
+    ['#ffffff', 'молочный', 'база, есть всегда', '#fff6f0'],
+    ['#f9d8c9', 'нюд', 'база, есть всегда', '#f9d8c9'],
+  ];
+  const notBase = ([hex, name]) => !BASES.some(([h, n]) => h === hex.toLowerCase() || n === String(name).trim().toLowerCase());
+  COLORS = COLORS.filter(notBase);
   const LATER = 'Выберу на месте';
   const MONTHS = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
   const MONTHS_GEN = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
@@ -184,7 +193,16 @@
   const adds = () => ADDONS.filter(a => st.addons.includes(a.id) && (!a.design || svc().design));
   const need = () => svc().min + (lvl().min || 0) + adds().reduce((n, a) => n + (a.min || 0), 0); // минут держать в календаре
   const mins = n => n + ' мин';
-  const colorName = () => st.color ? (COLORS.find(([c]) => c === st.color) || [])[1] || '' : LATER;
+  const findColor = hex => BASES.find(([c]) => c === hex) || COLORS.find(([c]) => c === hex);
+  const colorName = () => { const c = st.color && findColor(st.color); return st.color ? (c && (c[1] || c[2])) || '' : LATER; };
+  // подпись под цветами: название + «база» или эффект (у лаков с эффектом — другого цвета)
+  const colorLabel = hex => {
+    if (!hex) return LATER;
+    const c = findColor(hex);
+    if (!c) return '';
+    const base = BASES.includes(c);
+    return [c[1], c[2] && `<span class="swatch-name__${base ? 'base' : 'fx'}">${base ? c[2] : '✦ эффект: ' + c[2]}</span>`].filter(Boolean).join(' · ');
+  };
   const from = s => (s.lengths.length > 1 ? 'от ' : '') + fmt(s.lengths[0].price);
 
   function renderChoices() {
@@ -200,17 +218,19 @@
     }).join('');
     $('design-block').classList.toggle('off', !svc().design);
     $('levels-pick').innerHTML = LEVELS.map(l => `<button type="button" class="level${l.id === st.design ? ' on' : ''}${l.id === 'crazy' ? ' level--crazy' : ''}" data-lvl="${l.id}">${l.name}<small>${l.price ? `+${fmt(l.price)} · ${mins(l.min)}` : 'включено'}</small></button>`).join('');
-    $('colors').hidden = $('colors-title').hidden = !COLORS.length;
-    $('colors').innerHTML = COLORS.map(([c, n]) => `<button type="button" class="swatch${c === st.color ? ' on' : ''}" data-color="${c}" style="--c:${c}" title="${n}" aria-label="${n}"></button>`).join('')
+    const sw = (cls, [c, n, fx]) => `<button type="button" class="swatch${cls}${c === st.color ? ' on' : ''}" data-color="${c}" style="--c:${c}" title="${n || fx || ''}" aria-label="${n || fx || 'цвет'}"></button>`;
+    $('colors').innerHTML = BASES.map((b, i) => sw(' swatch--base' + (i ? '' : ' swatch--clear'), b)).join('')
+      + '<span class="swatches__sep" aria-hidden="true"></span>'
+      + COLORS.map(c => sw(c[2] ? ' swatch--fx' : '', c)).join('')
       + `<button type="button" class="swatch swatch--later${st.color ? '' : ' on'}" data-color="" title="${LATER}" aria-label="${LATER}">?</button>`;
-    $('color-name').innerHTML = colorName() || '&nbsp;';
+    $('color-name').innerHTML = colorLabel(st.color) || '&nbsp;';
     preview();
     summary();
   }
 
   function preview() {
     const l = lvl();
-    Nails.render($('hand'), { design: l.id, length: len().nails || 'short', color: st.color || '#f3e3dc', seed: st.seed });
+    Nails.render($('hand'), { design: l.id, length: len().nails || 'short', color: ((st.color && BASES.find(([c]) => c === st.color)) || [])[3] || st.color || '#f3e3dc', seed: st.seed });
     $('preview-tag').textContent = l.id ? l.name.toLowerCase() : (svc().design ? 'без дизайна' : 'без покрытия');
     $('preview-tag').classList.toggle('crazy', l.id === 'crazy');
     $('preview-text').textContent = svc().design ? l.text : 'Без покрытия: кутикула, форма, масло.';
@@ -250,10 +270,9 @@
   });
   $('colors').addEventListener('mouseover', e => { // на десктопе — название цвета под курсором
     const b = e.target.closest('[data-color]');
-    if (b) $('color-name').innerHTML = b.dataset.color ? b.title : LATER;
+    if (b) $('color-name').innerHTML = colorLabel(b.dataset.color) || '&nbsp;';
   });
-  $('colors').addEventListener('mouseleave', () => { $('color-name').innerHTML = colorName() || '&nbsp;';
-  });
+  $('colors').addEventListener('mouseleave', () => { $('color-name').innerHTML = colorLabel(st.color) || '&nbsp;'; });
   $('shuffle').onclick = () => { st.seed = Math.floor(Math.random() * 1e6); preview(); };
 
   function summary() {
@@ -433,9 +452,10 @@
   loadMonth('');
   fetch(API + '/api/colors').then(r => r.ok ? r.json() : Promise.reject()).then(list => {
     if (!Array.isArray(list)) return;
+    const esc = v => String(v || '').trim().replace(/[&<>"']/g, ch => '&#' + ch.charCodeAt(0) + ';');
     COLORS = rainbow(list.filter(c => /^#[0-9a-f]{6}$/i.test(c.hex))
-      .map(c => [c.hex, String(c.name || '').replace(/[&<>"']/g, ch => '&#' + ch.charCodeAt(0) + ';')]));
-    if (st.color && !COLORS.some(([c]) => c === st.color)) st.color = COLORS.length ? COLORS[0][0] : '';
+      .map(c => [c.hex.toLowerCase(), esc(c.name), esc(c.effect)]).filter(notBase));
+    if (st.color && !findColor(st.color)) st.color = COLORS.length ? COLORS[0][0] : BASES[0][0];
     renderChoices();
   }).catch(() => {}); // старый сервис без /api/colors — остаётся запасной список
 })();

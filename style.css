@@ -140,7 +140,17 @@ h3 { font-size: 1.15rem; font-weight: 700; }
 .swatch:hover { transform: scale(1.1); }
 .swatch.on { box-shadow: 0 0 0 3px var(--white), 0 0 0 6px var(--ink); }
 .swatch--later { background: var(--white); border-style: dashed; font-family: var(--display); font-weight: 700; font-size: 1.1rem; color: var(--ink); }
+/* базы — квадратики: не лак, есть всегда */
+.swatch--base { border-radius: 10px; }
+.swatch--clear { background: linear-gradient(135deg, #ffffffd0 0 30%, transparent 30% 46%, #ffffff90 46% 54%, transparent 54%), repeating-conic-gradient(#f6e4dd 0 25%, #fff 0 50%) 0 0 / 12px 12px; }
+.swatches__sep { width: 3px; border-radius: 2px; background: var(--ink); opacity: .2; margin: 0 2px; }
+/* лак с эффектом: лаймовая рамка и звёздочка */
+.swatch--fx { position: relative; box-shadow: 0 0 0 3px var(--lime), 0 0 0 5px var(--ink); margin: 0 3px; }
+.swatch--fx::after { content: "✦"; position: absolute; top: -9px; right: -9px; width: 18px; height: 18px; border-radius: 50%; background: var(--pink); border: 2px solid var(--ink); color: var(--white); font-size: 10px; line-height: 14px; text-align: center; }
+.swatch--fx.on { box-shadow: 0 0 0 3px var(--lime), 0 0 0 5px var(--ink), 0 0 0 8px var(--white), 0 0 0 10px var(--ink); }
 .swatch-name { margin-top: 10px; font-weight: 600; font-size: .92rem; min-height: 1.3em; }
+.swatch-name__base { color: var(--muted); }
+.swatch-name__fx { background: var(--lime); border: 2px solid var(--ink); border-radius: 999px; padding: 0 8px; font-weight: 800; }
 .swatches[hidden] + .swatch-name { display: none; }
 
 /* preview */
@@ -239,6 +249,27 @@ h3 { font-size: 1.15rem; font-weight: 700; }
 .facts li { background: var(--white); border: var(--b); border-radius: 14px; padding: 12px 16px; font-weight: 600; }
 .facts b { font-family: var(--display); color: var(--pink-d); margin-right: 4px; }
 
+/* ── где я: карта ──────────────────── */
+.where { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 22px; align-items: stretch; }
+.where__card { background: var(--white); border: var(--b); border-radius: var(--r); box-shadow: var(--sh); padding: 24px; display: flex; flex-direction: column; gap: 10px; }
+.where__card h3 { font-size: 1.3rem; text-transform: uppercase; font-weight: 900; margin: 0; }
+.where__card p { margin: 0; font-weight: 600; color: var(--muted); }
+.where__card .btn { align-self: flex-start; margin-top: auto; }
+.map { min-height: 420px; border: var(--b); border-radius: var(--r); box-shadow: 8px 8px 0 var(--pink); overflow: hidden; background: var(--blush); z-index: 0; }
+/* подложка в тонах сайта: серую карту красим в розово-кремовую */
+.map .leaflet-tile-pane { filter: grayscale(1) sepia(1) hue-rotate(290deg) saturate(2.2) contrast(1.15); }
+.map .leaflet-control-zoom a { border: var(--b) !important; border-radius: 12px !important; margin-bottom: 6px; color: var(--ink); font-weight: 800; }
+.map .leaflet-control-zoom { border: 0 !important; box-shadow: none !important; }
+.map .leaflet-control-zoom a:hover { background: var(--pink); color: var(--white); }
+.map .leaflet-control-attribution { font-size: 10px; background: #fff3f7cc; }
+.pin { position: relative; }
+.pin b {
+  position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); white-space: nowrap;
+  background: var(--pink); color: var(--white); border: var(--b); border-radius: 999px; box-shadow: var(--sh-sm);
+  padding: 6px 14px; font-family: var(--display); font-weight: 900; font-size: .8rem; text-transform: uppercase;
+}
+.pin b::after { content: ""; position: absolute; left: 50%; top: 100%; width: 14px; height: 14px; margin: -6px 0 0 -7px; background: var(--pink); border: solid var(--ink); border-width: 0 3px 3px 0; transform: rotate(45deg); }
+
 .footer { background: var(--ink); color: var(--white); padding: 44px 0 22px; }
 .footer__in { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
 .footer p { margin: 0; opacity: .75; }
@@ -288,7 +319,8 @@ h3 { font-size: 1.15rem; font-weight: 700; }
   .booker__top, .booker__bottom { grid-template-columns: 1fr; }
   .step--preview { position: static; }
   .sticker { position: static; display: inline-block; margin-top: 8px; transform: rotate(-3deg); }
-  .level-cards, .price-grid, .about { grid-template-columns: 1fr; }
+  .level-cards, .price-grid, .about, .where { grid-template-columns: 1fr; }
+  .map { min-height: 340px; }
   .about__pic { max-width: 440px; }
   .nav__links { display: none; }
   .nav .btn--sm { margin-left: auto; }
