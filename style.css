@@ -167,6 +167,7 @@ h3 { font-size: 1.15rem; font-weight: 700; }
 
 /* contact */
 .contact-note { margin: 14px 0 0; font-size: .85rem; font-weight: 600; color: var(--muted); }
+.contact-note__film { color: var(--pink-d); }
 .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .fields label { display: grid; gap: 4px; font-size: .8rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
 .fields .wide, .fields label:nth-child(3) { grid-column: 1 / -1; }
