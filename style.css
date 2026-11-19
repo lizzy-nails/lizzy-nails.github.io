@@ -166,6 +166,7 @@ h3 { font-size: 1.15rem; font-weight: 700; }
 .thumb button { position: absolute; top: -8px; right: -8px; width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--ink); background: var(--pink); color: var(--white); cursor: pointer; font-weight: 800; line-height: 1; padding: 0; }
 
 /* contact */
+.svc-note { margin: 14px 0 0; font-size: .85rem; font-weight: 600; color: var(--muted); }
 .contact-note { margin: 14px 0 0; font-size: .85rem; font-weight: 600; color: var(--muted); }
 .contact-note__film { color: var(--pink-d); }
 .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
