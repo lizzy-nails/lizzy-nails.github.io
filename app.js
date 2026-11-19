@@ -63,6 +63,21 @@
     ['#ff2e88', 'горячий розовый'], ['#ffc2d9', 'пудровый'], ['#e9c3b0', 'нюд'], ['#fff4ec', 'молочный'],
     ['#d4142f', 'красный'], ['#141014', 'чёрный'], ['#c9a7ff', 'лаванда'], ['#d7ff3a', 'кислотный лайм'],
   ];
+  // радужный порядок: красный → оранжевый → … → фиолетовый → розовый, затем нейтральные от светлых к тёмным
+  function rainbow(list) {
+    const key = ([hex]) => {
+      const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255);
+      const mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn, l = (mx + mn) / 2;
+      const sat = d ? d / (1 - Math.abs(2 * l - 1)) : 0;
+      if (sat < 0.15 || d < 0.08) return [1, -l]; // белый, нюд, серый, чёрный — в конце
+      let h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+      h = (h * 60 + 360) % 360;
+      return [0, h >= 345 ? h - 360 : h]; // малиновый ближе к красному, чем к розовому
+    };
+    return list.map(c => [c, key(c)]).sort((a, b) => a[1][0] - b[1][0] || a[1][1] - b[1][1]).map(([c]) => c);
+  }
+  COLORS = rainbow(COLORS);
+  const LATER = 'Выберу на месте';
   const MONTHS = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
   const MONTHS_GEN = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
   const WD = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
@@ -166,6 +181,7 @@
   const adds = () => ADDONS.filter(a => st.addons.includes(a.id) && (!a.design || svc().design));
   const need = () => svc().min + (lvl().min || 0) + adds().reduce((n, a) => n + (a.min || 0), 0); // минут держать в календаре
   const mins = n => n + ' мин';
+  const colorName = () => st.color ? (COLORS.find(([c]) => c === st.color) || [])[1] || '' : LATER;
   const from = s => (s.lengths.length > 1 ? 'от ' : '') + fmt(s.lengths[0].price);
 
   function renderChoices() {
@@ -182,14 +198,16 @@
     $('design-block').classList.toggle('off', !svc().design);
     $('levels-pick').innerHTML = LEVELS.map(l => `<button type="button" class="level${l.id === st.design ? ' on' : ''}${l.id === 'crazy' ? ' level--crazy' : ''}" data-lvl="${l.id}">${l.name}<small>${l.price ? `+${fmt(l.price)} · ${mins(l.min)}` : 'включено'}</small></button>`).join('');
     $('colors').hidden = $('colors-title').hidden = !COLORS.length;
-    $('colors').innerHTML = COLORS.map(([c, n]) => `<button type="button" class="swatch${c === st.color ? ' on' : ''}" data-color="${c}" style="--c:${c}" title="${n}" aria-label="${n}"></button>`).join('');
+    $('colors').innerHTML = COLORS.map(([c, n]) => `<button type="button" class="swatch${c === st.color ? ' on' : ''}" data-color="${c}" style="--c:${c}" title="${n}" aria-label="${n}"></button>`).join('')
+      + `<button type="button" class="swatch swatch--later${st.color ? '' : ' on'}" data-color="" title="${LATER}" aria-label="${LATER}">?</button>`;
+    $('color-name').innerHTML = colorName() || '&nbsp;';
     preview();
     summary();
   }
 
   function preview() {
     const l = lvl();
-    Nails.render($('hand'), { design: l.id, length: len().nails || 'short', color: st.color || '#ffc2d9', seed: st.seed });
+    Nails.render($('hand'), { design: l.id, length: len().nails || 'short', color: st.color || '#f3e3dc', seed: st.seed });
     $('preview-tag').textContent = l.id ? l.name.toLowerCase() : (svc().design ? 'без дизайна' : 'без покрытия');
     $('preview-tag').classList.toggle('crazy', l.id === 'crazy');
     $('preview-text').textContent = svc().design ? l.text : 'Без покрытия: кутикула, форма, масло.';
@@ -227,6 +245,12 @@
     const b = e.target.closest('[data-color]');
     if (b && svc().design) { st.color = b.dataset.color; renderChoices(); }
   });
+  $('colors').addEventListener('mouseover', e => { // на десктопе — название цвета под курсором
+    const b = e.target.closest('[data-color]');
+    if (b) $('color-name').innerHTML = b.dataset.color ? b.title : LATER;
+  });
+  $('colors').addEventListener('mouseleave', () => { $('color-name').innerHTML = colorName() || '&nbsp;';
+  });
   $('shuffle').onclick = () => { st.seed = Math.floor(Math.random() * 1e6); preview(); };
 
   function summary() {
@@ -237,7 +261,7 @@
       const [y, m, d] = st.date.split('-').map(Number);
       when = `${d} ${MONTHS_GEN[m - 1]}, ${WD[new Date(y, m - 1, d).getDay()]}` + (st.time ? ` в ${st.time}` : ' — выбери время');
     }
-    const what = [s.name, len().name && 'длина ' + len().name, l.id && 'дизайн «' + l.name.toLowerCase() + '»', ...a.map(x => x.name.toLowerCase())];
+    const what = [s.name, len().name && 'длина ' + len().name, l.id && 'дизайн «' + l.name.toLowerCase() + '»', s.design && (st.color ? colorName() && 'цвет «' + colorName() + '»' : 'цвет на месте'), ...a.map(x => x.name.toLowerCase())];
     $('summary').innerHTML = `<b>${when}</b><span>${what.filter(Boolean).join(' · ')}</span><strong>${l.id === 'crazy' ? 'от ' : ''}${fmt(total)}</strong>`;
     $('submit').disabled = !(st.date && st.time);
   }
@@ -294,7 +318,7 @@
     const fd = new FormData();
     const s = svc(), l = lvl();
     // сервис знает только старые id услуг и short/medium/long — точную услугу, длину и доп. услуги пишем в комментарий
-    const extra = [s.api && s.name, len().name && 'длина ' + len().name, ...adds().map(x => x.name.toLowerCase())].filter(Boolean);
+    const extra = [s.api && s.name, len().name && 'длина ' + len().name, s.design && !st.color && 'цвет выберет на месте', ...adds().map(x => x.name.toLowerCase())].filter(Boolean);
     Object.entries({
       date: st.date, time: st.time, minutes: need(), service: s.api || s.id, length: len().nails || 'short', design: l.id, color: s.design ? st.color : '',
       name: f.name.value, phone: f.phone.value, contact: f.contact.value, website: f.website.value,
@@ -406,9 +430,9 @@
   loadMonth('');
   fetch(API + '/api/colors').then(r => r.ok ? r.json() : Promise.reject()).then(list => {
     if (!Array.isArray(list)) return;
-    COLORS = list.filter(c => /^#[0-9a-f]{6}$/i.test(c.hex))
-      .map(c => [c.hex, String(c.name || '').replace(/[&<>"']/g, ch => '&#' + ch.charCodeAt(0) + ';')]);
-    if (!COLORS.some(([c]) => c === st.color)) st.color = COLORS.length ? COLORS[0][0] : '';
+    COLORS = rainbow(list.filter(c => /^#[0-9a-f]{6}$/i.test(c.hex))
+      .map(c => [c.hex, String(c.name || '').replace(/[&<>"']/g, ch => '&#' + ch.charCodeAt(0) + ';')]));
+    if (st.color && !COLORS.some(([c]) => c === st.color)) st.color = COLORS.length ? COLORS[0][0] : '';
     renderChoices();
   }).catch(() => {}); // старый сервис без /api/colors — остаётся запасной список
 })();
