@@ -336,6 +336,7 @@
     if (!st.date || !st.time) { err.textContent = 'Выбери день и время.'; return; }
     if (!f.name.value.trim()) { err.textContent = 'Как тебя зовут?'; f.name.focus(); return; }
     if (f.phone.value.replace(/\D/g, '').length < 10) { err.textContent = ERRORS.BAD_PHONE; f.phone.focus(); return; }
+    if (f.contact.value.trim().length < 3) { err.textContent = 'Оставь Telegram или ВКонтакте — чтобы я могла написать.'; f.contact.focus(); return; }
 
     const fd = new FormData();
     const s = svc(), l = lvl();
