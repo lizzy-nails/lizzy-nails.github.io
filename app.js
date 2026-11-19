@@ -6,15 +6,16 @@
   const API = new URLSearchParams(location.search).get('api') || 'https://berry-k3s.tail4064e5.ts.net:10000';
 
   /* lengths[].nails — длина для превью и для сервиса записи (short | medium | long);
-     api — id услуги для сервиса, если он не знает её под своим id */
+     api — id услуги для сервиса, если он не знает её под своим id;
+     min — сколько минут держать в календаре (верхняя граница time): окна, куда услуга не влезает, не показываются */
   const SERVICES = [
-    { id: 'manicure',     cat: 'Маникюр', name: 'Маникюр (без покрытия)', time: '50 мин', design: false, lengths: [{ price: 1500 }] },
-    { id: 'japanese',     cat: 'Маникюр', name: 'Японский маникюр', time: '50 мин', api: 'manicure', design: false, lengths: [{ price: 1600 }] },
-    { id: 'removal',      cat: 'Маникюр', name: 'Снятие покрытия', time: '30 мин', api: 'manicure', design: false, lengths: [{ price: 500 }] },
-    { id: 'manicure_gel', cat: 'Маникюр + покрытие', name: 'Маникюр + покрытие', time: '1 ч 30 мин – 2 ч', incl: 'снятие включено', design: true, lengths: [
+    { id: 'manicure',     cat: 'Маникюр', name: 'Маникюр (без покрытия)', time: '50 мин', min: 50, design: false, lengths: [{ price: 1500 }] },
+    { id: 'japanese',     cat: 'Маникюр', name: 'Японский маникюр', time: '50 мин', min: 50, api: 'manicure', design: false, lengths: [{ price: 1600 }] },
+    { id: 'removal',      cat: 'Маникюр', name: 'Снятие покрытия', time: '30 мин', min: 30, api: 'manicure', design: false, lengths: [{ price: 500 }] },
+    { id: 'manicure_gel', cat: 'Маникюр + покрытие', name: 'Маникюр + покрытие', time: '1 ч 30 мин – 2 ч', min: 120, incl: 'снятие включено', design: true, lengths: [
       { name: '1–2', price: 1700, nails: 'short' }, { name: '3–4', price: 1800, nails: 'medium' },
     ] },
-    { id: 'extension',    cat: 'Наращивание', name: 'Наращивание', time: '2 ч 30 мин – 3 ч 30 мин', incl: 'снятие включено', design: true, lengths: [
+    { id: 'extension',    cat: 'Наращивание', name: 'Наращивание', time: '2 ч 30 мин – 3 ч 30 мин', min: 210, incl: 'снятие включено', design: true, lengths: [
       { name: '1–2', price: 1800, nails: 'short' }, { name: '3', price: 1900, nails: 'medium' }, { name: '4', price: 2000, nails: 'medium' },
       { name: '5', price: 2100, nails: 'long' }, { name: '6', price: 2200, nails: 'long' },
     ] },
@@ -82,23 +83,33 @@
   };
 
   /* ── slots ─────────────────────────────────────────── */
+  let loads = 0; // ответ на устаревший запрос (сменили месяц или услугу) не применяем
   async function loadMonth(m) {
+    const n = ++loads;
     $('cal-msg').textContent = 'Загружаю свободные окна…';
     $('cal-msg').hidden = false;
     try {
-      const r = await fetch(API + '/api/slots' + (m ? '?month=' + m : ''));
+      const r = await fetch(API + '/api/slots?minutes=' + svc().min + (m ? '&month=' + m : ''));
       if (!r.ok) throw new Error(r.status);
       const d = await r.json();
+      if (n !== loads) return;
       st.month = d.month; st.today = d.today; st.free = d.free || {};
       if (!st.months.length) st.months = [d.month, shiftMonth(d.month, 1)];
       $('cal-msg').hidden = Object.keys(st.free).length > 0;
       $('cal-msg').textContent = 'В этом месяце свободных окон нет — загляни в следующий.';
     } catch (e) {
+      if (n !== loads) return;
       st.free = {};
       if (!st.month) { const n = new Date(); st.month = `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}`; st.months = [st.month, shiftMonth(st.month, 1)]; }
       $('cal-msg').textContent = 'Онлайн-запись сейчас недоступна. Попробуй чуть позже 🙏';
     }
-    if (st.date && !(st.free[st.date] || []).includes(st.time)) { st.time = ''; }
+    if (st.date && !(st.free[st.date] || []).includes(st.time)) {
+      if (st.time && st.date.startsWith(st.month)) {
+        $('cal-msg').textContent = 'Выбранная услуга не помещается в это окно — выбери другое время.';
+        $('cal-msg').hidden = false;
+      }
+      st.time = '';
+    }
     renderCal();
   }
 
@@ -181,7 +192,10 @@
 
   $('services').addEventListener('click', e => {
     const b = e.target.closest('[data-svc]');
-    if (b) { st.service = b.dataset.svc; if (st.length >= svc().lengths.length) st.length = 0; renderChoices(); }
+    if (!b) return;
+    const was = svc().min;
+    st.service = b.dataset.svc; if (st.length >= svc().lengths.length) st.length = 0; renderChoices();
+    if (svc().min !== was && st.month) loadMonth(st.month); // другая длительность — другие окна
   });
   $('lengths').addEventListener('click', e => {
     const b = e.target.closest('[data-len]');
@@ -271,7 +285,7 @@
     // сервис знает только старые id услуг и short/medium/long — точную услугу, длину и доп. услуги пишем в комментарий
     const extra = [s.api && s.name, len().name && 'длина ' + len().name, ...adds().map(x => x.name.toLowerCase())].filter(Boolean);
     Object.entries({
-      date: st.date, time: st.time, service: s.api || s.id, length: len().nails || 'short', design: l.id, color: s.design ? st.color : '',
+      date: st.date, time: st.time, minutes: s.min, service: s.api || s.id, length: len().nails || 'short', design: l.id, color: s.design ? st.color : '',
       name: f.name.value, phone: f.phone.value, contact: f.contact.value, website: f.website.value,
       comment: (extra.length ? `[${extra.join('; ')}] ` : '') + f.comment.value,
     }).forEach(([k, v]) => fd.append(k, v));
