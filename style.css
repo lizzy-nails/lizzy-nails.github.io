@@ -256,8 +256,8 @@ h3 { font-size: 1.15rem; font-weight: 700; }
 .where__card p { margin: 0; font-weight: 600; color: var(--muted); }
 .where__card .btn { align-self: flex-start; margin-top: auto; }
 .map { min-height: 420px; border: var(--b); border-radius: var(--r); box-shadow: 8px 8px 0 var(--pink); overflow: hidden; background: var(--blush); z-index: 0; }
-/* подложка в тонах сайта: серую карту красим в розово-кремовую */
-.map .leaflet-tile-pane { filter: grayscale(1) sepia(1) hue-rotate(290deg) saturate(2.2) contrast(1.15); }
+/* подложка в тонах сайта: дуотон #map-duo из index.html — тёмное в чернила, середина в розовый, светлое в крем */
+.map .leaflet-tile-pane { filter: url(#map-duo); }
 .map .leaflet-control-zoom a { border: var(--b) !important; border-radius: 12px !important; margin-bottom: 6px; color: var(--ink); font-weight: 800; }
 .map .leaflet-control-zoom { border: 0 !important; box-shadow: none !important; }
 .map .leaflet-control-zoom a:hover { background: var(--pink); color: var(--white); }

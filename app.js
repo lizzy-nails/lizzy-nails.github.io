@@ -381,35 +381,38 @@
   };
 
   /* ── static sections ───────────────────────────────── */
-  $('level-cards').innerHTML = LEVELS.filter(l => l.id).map(l => `
-    <article class="lcard">
-      <svg id="lv-${l.id}" viewBox="0 0 500 330" aria-hidden="true"></svg>
-      <h3>${l.name}</h3><p>${l.text}</p><span class="lcard__price">+${fmt(l.price)}</span>
-      <button type="button" class="btn btn--sm" data-pick="${l.id}">Выбрать</button>
-    </article>`).join('');
-  Nails.render($('lv-light'), { design: 'light', length: 'short', color: '#ffc2d9', seed: 11 });
-  Nails.render($('lv-medium'), { design: 'medium', length: 'medium', color: '#fff4ec', seed: 5 });
-  Nails.render($('lv-crazy'), { design: 'crazy', length: 'long', color: '#ff2e88', seed: 3 });
   Nails.render($('about-hand'), { design: 'medium', length: 'medium', color: '#141014', seed: 42 });
-  $('level-cards').addEventListener('click', e => {
-    const b = e.target.closest('[data-pick]');
-    if (!b) return;
-    const was = need();
-    if (!svc().design) { st.service = 'manicure_gel'; st.length = 0; }
-    st.design = b.dataset.pick;
-    renderChoices();
-    refit(was);
-    $('book').scrollIntoView({ behavior: 'smooth' });
-  });
+  // уровни дизайна и цены сейчас скрыты в index.html — рисуем, только если блоки есть
+  if ($('level-cards')) {
+    $('level-cards').innerHTML = LEVELS.filter(l => l.id).map(l => `
+      <article class="lcard">
+        <svg id="lv-${l.id}" viewBox="0 0 500 330" aria-hidden="true"></svg>
+        <h3>${l.name}</h3><p>${l.text}</p><span class="lcard__price">+${fmt(l.price)}</span>
+        <button type="button" class="btn btn--sm" data-pick="${l.id}">Выбрать</button>
+      </article>`).join('');
+    Nails.render($('lv-light'), { design: 'light', length: 'short', color: '#ffc2d9', seed: 11 });
+    Nails.render($('lv-medium'), { design: 'medium', length: 'medium', color: '#fff4ec', seed: 5 });
+    Nails.render($('lv-crazy'), { design: 'crazy', length: 'long', color: '#ff2e88', seed: 3 });
+    $('level-cards').addEventListener('click', e => {
+      const b = e.target.closest('[data-pick]');
+      if (!b) return;
+      const was = need();
+      if (!svc().design) { st.service = 'manicure_gel'; st.length = 0; }
+      st.design = b.dataset.pick;
+      renderChoices();
+      refit(was);
+      $('book').scrollIntoView({ behavior: 'smooth' });
+    });
 
-  const row = (name, note, price) => `<div class="pl"><span>${name}${note ? `<small>${note}</small>` : ''}</span><b>${price}</b></div>`;
-  $('price-list').innerHTML = [...new Set(SERVICES.map(s => s.cat))].map(c => `<h3>${c}</h3>` + SERVICES.filter(s => s.cat === c).map(s =>
-    s.lengths.length > 1
-      ? s.lengths.map(l => row('Длина ' + l.name, [s.time, s.incl].filter(Boolean).join(' · '), fmt(l.price))).join('')
-      : row(s.name, s.time, fmt(s.lengths[0].price))).join('')).join('');
-  $('design-prices').innerHTML = '<h3>Дополнительные услуги</h3>'
-    + LEVELS.filter(l => l.id).map(l => row(l.full, l.text + ' · ' + mins(l.min), (l.id === 'crazy' ? 'от ' : '+') + fmt(l.price))).join('')
-    + ADDONS.map(a => row(a.name, mins(a.min) + (a.design ? ' · к покрытию и наращиванию' : ''), fmt(a.price))).join('');
+    const row = (name, note, price) => `<div class="pl"><span>${name}${note ? `<small>${note}</small>` : ''}</span><b>${price}</b></div>`;
+    $('price-list').innerHTML = [...new Set(SERVICES.map(s => s.cat))].map(c => `<h3>${c}</h3>` + SERVICES.filter(s => s.cat === c).map(s =>
+      s.lengths.length > 1
+        ? s.lengths.map(l => row('Длина ' + l.name, [s.time, s.incl].filter(Boolean).join(' · '), fmt(l.price))).join('')
+        : row(s.name, s.time, fmt(s.lengths[0].price))).join('')).join('');
+    $('design-prices').innerHTML = '<h3>Дополнительные услуги</h3>'
+      + LEVELS.filter(l => l.id).map(l => row(l.full, l.text + ' · ' + mins(l.min), (l.id === 'crazy' ? 'от ' : '+') + fmt(l.price))).join('')
+      + ADDONS.map(a => row(a.name, mins(a.min) + (a.design ? ' · к покрытию и наращиванию' : ''), fmt(a.price))).join('');
+  }
   /* ── портфолио: два ряда коллажа едут навстречу ─────── */
   (function works() {
     const designs = ['light', 'medium', 'crazy'], lens = ['short', 'medium', 'long'];

@@ -21,10 +21,9 @@
     <nav class="nav__links">
       <a href="#book">Запись</a>
       <a href="#works-sec">Работы</a>
-      <a href="#levels">Дизайн</a>
-      <a href="#prices">Цены</a>
-      <a href="#about">Лиза</a>
+      <!-- <a href="#levels">Дизайн</a> <a href="#prices">Цены</a> -->
       <a href="#where">Адрес</a>
+      <a href="#about">Лиза</a>
     </nav>
     <a href="#book" class="btn btn--sm">Записаться</a>
   </div>
@@ -155,7 +154,8 @@
     <div class="works" id="works"></div>
   </section>
 
-  <!-- ── Уровни дизайна ───────────────────────────────────── -->
+  <!-- Уровни дизайна и цены скрыты: дублируют форму записи. Вернуть — раскомментировать.
+   ── Уровни дизайна ───────────────────────────────────── 
   <section class="section" id="levels">
     <div class="wrap">
       <h2>Уровни дизайна</h2>
@@ -164,7 +164,7 @@
     </div>
   </section>
 
-  <!-- ── Цены ─────────────────────────────────────────────── -->
+   ── Цены ─────────────────────────────────────────────── 
   <section class="section section--pink" id="prices">
     <div class="wrap">
       <h2>Цены</h2>
@@ -172,6 +172,32 @@
       <div class="price-grid">
         <div class="price-list" id="price-list"></div>
         <div class="price-list price-list--dark" id="design-prices"></div>
+      </div>
+    </div>
+  </section>
+  -->
+
+  <!-- ── Где я ────────────────────────────────────────────── -->
+  <section class="section section--where" id="where">
+    <div class="wrap">
+      <h2>Где я</h2>
+      <p class="sub">Приокский район Нижнего Новгорода, посёлок Новинки.</p>
+      <div class="where">
+        <div class="where__card">
+          <h3>Новинки</h3>
+          <p>Инженерный проезд, д.&nbsp;1 к.&nbsp;1<br>ЖК «Акварель», Приокский район</p>
+          <p>Подъезд и как пройти — напишу при подтверждении записи.</p>
+          <a class="btn btn--pink" href="https://yandex.ru/maps/?rtext=~56.19417,43.88998&amp;rtt=auto" target="_blank" rel="noopener">Маршрут в&nbsp;Яндекс Картах</a>
+        </div>
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="map-duo" color-interpolation-filters="sRGB">
+          <feColorMatrix type="matrix" values=".33 .33 .33 0 0  .33 .33 .33 0 0  .33 .33 .33 0 0  0 0 0 1 0"/>
+          <feComponentTransfer>
+            <feFuncR type="table" tableValues="0.07 0.07 0.6 1 1 1"/>
+            <feFuncG type="table" tableValues="0.04 0.04 0.1 0.5 0.86 0.97"/>
+            <feFuncB type="table" tableValues="0.06 0.06 0.35 0.72 0.92 0.97"/>
+          </feComponentTransfer>
+        </filter></svg>
+        <div class="map" id="map" role="region" aria-label="Карта: Новинки, Инженерный проезд, 1 к1"></div>
       </div>
     </div>
   </section>
@@ -188,23 +214,6 @@
           <li><b>Цена заранее.</b> Итог видно в форме записи.</li>
           <li><b>С 16 лет.</b> Младше — не принимаю.</li>
         </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── Где я ────────────────────────────────────────────── -->
-  <section class="section section--where" id="where">
-    <div class="wrap">
-      <h2>Где я</h2>
-      <p class="sub">Приокский район Нижнего Новгорода, посёлок Новинки.</p>
-      <div class="where">
-        <div class="where__card">
-          <h3>Новинки</h3>
-          <p>Инженерный проезд, д.&nbsp;1 к.&nbsp;1<br>ЖК «Акварель», Приокский район</p>
-          <p>Подъезд и как пройти — напишу при подтверждении записи.</p>
-          <a class="btn btn--pink" href="https://yandex.ru/maps/?rtext=~56.19417,43.88998&amp;rtt=auto" target="_blank" rel="noopener">Маршрут в&nbsp;Яндекс Картах</a>
-        </div>
-        <div class="map" id="map" role="region" aria-label="Карта: Новинки, Инженерный проезд, 1 к1"></div>
       </div>
     </div>
   </section>
