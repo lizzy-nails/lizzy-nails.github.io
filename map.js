@@ -3,7 +3,7 @@
   'use strict';
   const el = document.getElementById('map');
   if (!el || !window.L) return; // CDN не загрузился — остаются адрес и ссылка на маршрут
-  const HOME = [56.19417, 43.88998]; // Новинки, Инженерный пр-д, 1 к1
+  const HOME = [56.19435, 43.89063]; // Новинки, Инженерный пр-д, 1
   const map = L.map(el, {
     scrollWheelZoom: false,       // не перехватывать прокрутку страницы
     attributionControl: true,
@@ -17,6 +17,6 @@
   map.setView(el.clientWidth < 600 ? [56.212, 43.905] : [56.226, 43.935], 12);
   L.marker(HOME, {
     icon: L.divIcon({ className: 'pin', html: '<b>я тут ✦</b>', iconSize: [0, 0], iconAnchor: [0, 10] }),
-    keyboard: false, title: 'Инженерный проезд, 1 к1',
+    keyboard: false, title: 'Инженерный проезд, 1',
   }).addTo(map);
 })();
